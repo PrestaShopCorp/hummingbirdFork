@@ -10,6 +10,7 @@
 {hook h='displayPersonalInformationTop' customer=$customer}
 
 {include file='_partials/form-errors.tpl' errors=$errors['']}
+{include file='checkout/_partials/one-page-checkout/address-modal.tpl' formFields=$formFields prefix=''}
 
 {* ===== Contact information ===== *}
 <section class="one-page-checkout__section">
