@@ -79,7 +79,9 @@
 {literal}
   <script>
     /**
-     *
+     * Initializes the address modal: dynamically updates the title
+     * and pre-fills form fields based on whether the user is
+     * creating a new address or editing an existing one.
      */
     (function() {
       const initModal = () => {
@@ -126,7 +128,7 @@
     })();
 
     /**
-     *
+     * Handles the AJAX form submission.
      */
     document.getElementById('submit-address-modal').addEventListener('click', function() {
       const container = document.getElementById('address-form-container');
@@ -155,7 +157,7 @@
           }
         })
         .catch(err => {
-          console.error("Error ", err);
+          console.error(err);
           saveBtn.disabled = false;
         });
     });
