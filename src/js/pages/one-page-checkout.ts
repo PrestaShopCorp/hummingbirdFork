@@ -6,28 +6,42 @@ import {onePageCheckout as OpcMap} from '@constants/selectors-map';
 
 let billingToggleHandler: ((e: Event) => void) | null = null;
 
-const initOnePageCheckout = () => {
-  const form = document.querySelector<HTMLFormElement>(OpcMap.form);
+const getForms = () => {
+  return {
+    customerForm: document.querySelector<HTMLFormElement>(OpcMap.customerForm),
+    deliveryForm: document.querySelector<HTMLFormElement>(OpcMap.deliveryForm),
+    invoiceForm: document.querySelector<HTMLFormElement>(OpcMap.invoiceForm),
+  }
+}
 
-  if (!form) {
+const initOnePageCheckout = () => {
+  const {customerForm, deliveryForm, invoiceForm} = getForms();
+
+  if (!customerForm || !deliveryForm || !invoiceForm) {
     return;
   }
 
   // Delegated listeners on the form (added once, survives DOM refreshes)
-  form.addEventListener('input', () => validateForm());
-  form.addEventListener('change', () => validateForm());
+  onFormChange(customerForm, () => validateAllForms());
+  onFormChange(deliveryForm, () => validateAllForms());
+  onFormChange(invoiceForm, () => validateAllForms());
 
   initBillingToggle();
-  validateForm();
+  validateAllForms();
 
   const {prestashop} = window;
 
   // Re-init after any address form refresh (country change or other)
   prestashop.on('updatedOpcAddressForm', () => {
     initBillingToggle();
-    validateForm();
+    validateAllForms();
   });
 };
+
+const onFormChange = (form: HTMLFormElement, callback: () => void) => {
+  form.addEventListener('input', callback);
+  form.addEventListener('change', callback);
+}
 
 /**
  * Toggle billing address section visibility
@@ -47,46 +61,55 @@ const initBillingToggle = () => {
 
   billingToggleHandler = () => {
     billingSection.style.display = checkbox.checked ? 'none' : '';
-    validateForm();
+    validateAllForms();
   };
 
   checkbox.addEventListener('change', billingToggleHandler);
 };
 
-/**
- * Check all visible required fields and toggle pay button
- */
-const validateForm = () => {
-  const form = document.querySelector<HTMLFormElement>(OpcMap.form);
+const toggleDisabledPayButton = (value: boolean) => {
   const payButton = document.querySelector<HTMLButtonElement>(OpcMap.payButton);
 
-  if (!form || !payButton) {
+  if (!payButton) {
     return;
   }
 
+  payButton.disabled = value;
+}
+
+const validateAllForms = () => {
+  const {customerForm, deliveryForm, invoiceForm} = getForms();
+
+  if (!customerForm || !deliveryForm || !invoiceForm) {
+    return;
+  }
+
+  const customerIsValid = validateForm(customerForm);
+  const deliveryIsValid = validateForm(deliveryForm);
+
+  const useSameAddress = document.querySelector<HTMLInputElement>(OpcMap.useSameAddress)
+
+  const invoiceIsValid = useSameAddress?.checked ? true : validateForm(invoiceForm);
+  toggleDisabledPayButton(customerIsValid && deliveryIsValid && invoiceIsValid)
+}
+
+/**
+ * Check all visible required fields and toggle pay button
+ */
+const validateForm = (form: HTMLFormElement): boolean => {
   const requiredFields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
     '[required]',
   );
 
-  let isValid = true;
-
   requiredFields.forEach((field) => {
-    // Skip fields inside hidden billing section
-    const billingSection = field.closest(OpcMap.billingSection) as HTMLElement | null;
-
-    if (billingSection?.style.display === 'none') {
-      return;
-    }
-
     const isCheckbox = field instanceof HTMLInputElement && field.type === 'checkbox';
     const fieldIsValid = isCheckbox ? field.checked : Boolean(field.value?.trim());
 
     if (!fieldIsValid) {
-      isValid = false;
+      return false;
     }
   });
-
-  payButton.disabled = !isValid;
+  return true;
 };
 
 export default initOnePageCheckout;

@@ -1,17 +1,18 @@
 {**
  * One Page Checkout - Layout
  * Thin wrapper: <form> + {render} + submit button.
- * All sections are rendered inside one-page-checkout-form.tpl via {render ui=$opc_form}.
+ * All sections are rendered inside one-page-checkout-form.tpl via {render ui=$opc_customer_address_form}.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *}
 
-<form class="one-page-checkout" method="POST" action="{$urls.pages.order}" data-ps-action="form-validation">
   <input type="hidden" name="submitOnePageCheckout" value="1">
 
+{render ui=$opc_customer_form}
+
   <div class="js-opc-address-form">
-    {render ui=$opc_form}
+    {include file='checkout/_partials/one-page-checkout-address-form.tpl'}
   </div>
 
   {* ===== Delivery method ===== *}
@@ -85,4 +86,3 @@
     {hook h='displayPaymentByBinaries'}
   </div>
 
-</form>
