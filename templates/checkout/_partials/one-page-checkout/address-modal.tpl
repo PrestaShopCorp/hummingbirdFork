@@ -83,83 +83,76 @@
      * and pre-fills form fields based on whether the user is
      * creating a new address or editing an existing one.
      */
-    (function() {
-      const initModal = () => {
-        const addressModal = document.getElementById('address-modal');
-        if (!addressModal) return;
+    document.addEventListener('DOMContentLoaded', () => {
+      const addressModal = document.getElementById('address-modal');
+      if (!addressModal) return;
 
-        addressModal.addEventListener('show.bs.modal', (event) => {
-          const button = event.relatedTarget;
-          if (!button) return;
+      addressModal.addEventListener('show.bs.modal', (event) => {
+        const button = event.relatedTarget;
+        if (!button) return;
 
-          const type = button.getAttribute('data-bs-type');
+        const type = button.getAttribute('data-type');
 
-          const modalTitle = addressModal.querySelector('.modal-header h2');
-          if (modalTitle) {
-            modalTitle.textContent = (type === 'edit')
-              ? addressModal.dataset.titleEdit
-              : addressModal.dataset.titleNew;
-          }
+        const modalTitle = addressModal.querySelector('.modal-header h2');
+        if (modalTitle) {
+          modalTitle.textContent = (type === 'edit')
+            ? addressModal.getAttribute('data-title-edit')
+            : addressModal.getAttribute('data-title-new');
+        }
 
-          const fields = [
-            'id_address', 'alias', 'firstname', 'lastname',
-            'company', 'vat_number', 'address1', 'address2',
-            'city', 'postcode', 'id_state', 'id_country', 'phone'
-          ];
+        const fields = [
+          'id_address', 'alias', 'firstname', 'lastname',
+          'company', 'vat_number', 'address1', 'address2',
+          'city', 'postcode', 'id_state', 'id_country', 'phone'
+        ];
 
-          fields.forEach(field => {
-            const input = addressModal.querySelector('[name$="' + field + '"]');
-            if (input) {
-              if (type === 'edit') {
-                input.value = button.getAttribute('data-' + field) || '';
-              } else {
-                input.value = '';
-              }
+        fields.forEach(field => {
+          const input = addressModal.querySelector('[name$="' + field + '"]');
+          if (input) {
+            if (type === 'edit') {
+              input.value = button.getAttribute('data-' + field) || '';
+            } else {
+              input.value = '';
             }
-          });
+          }
         });
-      };
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initModal);
-      } else {
-        initModal();
-      }
-    })();
-
-    /**
-     * Handles the AJAX form submission.
-     */
-    document.getElementById('submit-address-modal').addEventListener('click', function() {
-      const container = document.getElementById('address-form-container');
-      const saveBtn = this;
-
-      const formData = new FormData();
-      container.querySelectorAll('input, select').forEach(input => {
-        formData.append(input.name, input.value);
       });
 
-      saveBtn.disabled = true;
-      saveBtn.innerHTML = saveBtn.dataset.loadingText;
 
-      fetch(prestashop.urls.pages.address + '?ajax=1', {
-        method: 'POST',
-        body: formData,
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success || !data.errors) {
-            window.location.reload();
-          } else {
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = saveBtn.dataset.text;
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          saveBtn.disabled = false;
+      /**
+       * Handles the AJAX form submission.
+       */
+      document.getElementById('submit-address-modal').addEventListener('click', function() {
+        const container = document.getElementById('address-form-container');
+        const saveBtn = this;
+
+        const formData = new FormData();
+        container.querySelectorAll('input, select').forEach(input => {
+          formData.append(input.name, input.value);
         });
+
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = saveBtn.getAttribute('data-loading-text');
+
+        fetch(prestashop.urls.pages.address + '?ajax=1', {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success || !data.errors) {
+              window.location.reload();
+            } else {
+              saveBtn.disabled = false;
+              saveBtn.innerHTML = saveBtn.getAttribute('data-text');
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            saveBtn.disabled = false;
+          });
+      });
     });
   </script>
 {/literal}

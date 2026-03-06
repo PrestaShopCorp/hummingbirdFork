@@ -40,7 +40,7 @@
       class="btn btn-primary"
       data-bs-toggle="modal"
       data-bs-target="#address-modal"
-      data-bs-type="edit"
+      data-type="edit"
       data-id_address="{$address.id}"
       data-alias="{$address.alias|escape:'html':'UTF-8'}"
       data-firstname="{$address.firstname|escape:'html':'UTF-8'}"
@@ -66,7 +66,7 @@
   class="btn btn-primary"
   data-bs-toggle="modal"
   data-bs-target="#address-modal"
-  data-bs-type="create"
+  data-type="create"
 >
   {l s='Add new address' d='Shop.Theme.Actions'}
 </button>
