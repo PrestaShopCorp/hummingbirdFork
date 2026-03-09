@@ -83,7 +83,7 @@
      * and pre-fills form fields based on whether the user is
      * creating a new address or editing an existing one.
      */
-    document.addEventListener('DOMContentLoaded', () => {
+    function initAddressManagement() {
       const addressModal = document.getElementById('address-modal');
       if (!addressModal) return;
 
@@ -122,7 +122,7 @@
       /**
        * Handles the AJAX form submission.
        */
-      document.getElementById('submit-address-modal').addEventListener('click', function() {
+      document.getElementById('submit-address-modal').addEventListener('click', function () {
         const container = document.getElementById('address-form-container');
         const saveBtn = this;
 
@@ -137,12 +137,14 @@
         fetch(prestashop.urls.pages.address + '?ajax=1', {
           method: 'POST',
           body: formData,
-          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          headers: {'X-Requested-With': 'XMLHttpRequest'}
         })
           .then(res => res.json())
           .then(data => {
             if (data.success || !data.errors) {
-              window.location.reload();
+              $(addressModal).modal('hide');
+              renderLoadingState();
+              refreshDOM();
             } else {
               saveBtn.disabled = false;
               saveBtn.innerHTML = saveBtn.getAttribute('data-text');
@@ -153,6 +155,78 @@
             saveBtn.disabled = false;
           });
       });
-    });
+    }
+
+    function renderLoadingState() {
+      const getSpinnerHTML = (text) => `
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <span class="spinner-text">${text}</span>
+        </div>
+      `;
+
+      const containerIds = [
+        'opc-delivery-address',
+        'opc-delivery-methods',
+        'opc-payment-methods'
+      ];
+
+      containerIds.forEach(id => {
+        const container = document.getElementById(id);
+        if (container) {
+          const loadingText = container.getAttribute('data-loading-text') || 'Loading...';
+          container.innerHTML = getSpinnerHTML(loadingText);
+        }
+      });
+    }
+
+    function refreshDOM() {
+      const refreshUrl = window.location.href;
+
+      fetch(refreshUrl)
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+
+          document.body.innerHTML = doc.body.innerHTML;
+          initAddressManagement();
+        })
+        .catch(error => console.error(error));
+    }
+
+    document.addEventListener('DOMContentLoaded', initAddressManagement);
   </script>
+{/literal}
+{literal}
+  <style>
+    .spinner-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 0;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #0052cc;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    .spinner-text {
+      color: #555;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 {/literal}
