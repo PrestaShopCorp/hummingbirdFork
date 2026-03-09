@@ -13,30 +13,43 @@ const initOnePageCheckout = () => {
     return;
   }
 
+  const isVirtualCart = form.dataset.cartIsVirtual === 'true';
+
   // Delegated listeners on the form (added once, survives DOM refreshes)
   form.addEventListener('input', () => validateForm());
   form.addEventListener('change', () => validateForm());
 
-  initBillingToggle();
+  initBillingToggle(isVirtualCart);
   validateForm();
 
   const {prestashop} = window;
 
   // Re-init after any address form refresh (country change or other)
   prestashop.on('updatedOpcAddressForm', () => {
-    initBillingToggle();
+    initBillingToggle(isVirtualCart);
     validateForm();
   });
 };
 
 /**
  * Toggle billing address section visibility
+ * For virtual carts: always show billing (invoice) section.
+ * For physical carts: toggle via "use same address" checkbox.
  */
-const initBillingToggle = () => {
+const initBillingToggle = (isVirtualCart: boolean) => {
   const checkbox = document.querySelector<HTMLInputElement>(OpcMap.useSameAddress);
   const billingSection = document.querySelector<HTMLElement>(OpcMap.billingSection);
 
-  if (!checkbox || !billingSection) {
+  if (!billingSection) {
+    return;
+  }
+
+  if (isVirtualCart) {
+    billingSection.style.display = '';
+    return;
+  }
+
+  if (!checkbox) {
     return;
   }
 

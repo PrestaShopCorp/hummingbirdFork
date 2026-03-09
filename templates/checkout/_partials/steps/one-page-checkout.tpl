@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  *}
 
-<form class="one-page-checkout" method="POST" action="{$urls.pages.order}" data-ps-action="form-validation">
+<form class="one-page-checkout" method="POST" action="{$urls.pages.order}" data-ps-action="form-validation" data-cart-is-virtual="{$cart.is_virtual|@json_encode}">
   <input type="hidden" name="submitOnePageCheckout" value="1">
 
   <div class="js-opc-address-form">

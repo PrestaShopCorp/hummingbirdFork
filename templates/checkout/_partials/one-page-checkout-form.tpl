@@ -45,25 +45,26 @@
   </section>
 {/if}
 {* ===== Delivery address fields ===== *}
-<section class="one-page-checkout__section">
-  <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
+{if !$cart.is_virtual}
+  <section class="one-page-checkout__section">
+    <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
 
-  <section class="form-fields">
-    {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
-      formFields=$formFields
-      prefix=''
-    }
+    <section class="form-fields">
+        {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
+          formFields=$formFields
+          prefix=''
+        }
+      <input type="hidden" name="saveAddress" value="delivery">
 
-    <input type="hidden" name="saveAddress" value="delivery">
-
-    <div class="form-check">
-      <input class="form-check-input js-opc-use-same-address" type="checkbox" id="opc-use-same-address" name="use_same_address" value="1" checked>
-      <label class="form-check-label" for="opc-use-same-address">
-        {l s='Use this address for invoice too' d='Shop.Theme.Checkout'}
-      </label>
-    </div>
+      <div class="form-check">
+        <input class="form-check-input js-opc-use-same-address" type="checkbox" id="opc-use-same-address" name="use_same_address" value="1" checked>
+        <label class="form-check-label" for="opc-use-same-address">
+          {l s='Use this address for invoice too' d='Shop.Theme.Checkout'}
+        </label>
+      </div>
+    </section>
   </section>
-</section>
+{/if}
 
 {* ===== Billing address fields (hidden by default, JS manages visibility) ===== *}
 <section class="one-page-checkout__section" id="opc-billing-section" style="display: none;">
