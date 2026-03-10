@@ -154,15 +154,16 @@
               $(addressModal).modal('hide');
               renderLoadingState();
               refreshDOM();
-            } else {
-              saveBtn.disabled = false;
-              saveBtn.innerHTML = saveBtn.getAttribute('data-text');
             }
           })
           .catch(err => {
             console.error(err);
+          })
+          .finally(() => {
             saveBtn.disabled = false;
-          });
+            saveBtn.innerHTML = saveBtn.getAttribute('data-text');
+            container.classList.remove('was-validated');
+          })
       });
     }
 
@@ -190,15 +191,22 @@
     }
 
     function refreshDOM() {
-      const refreshUrl = window.location.href;
+      const formData = new FormData();
+      formData.append('ajax', '1');
+      formData.append('action', 'opcAddressesList');
 
-      fetch(refreshUrl)
-        .then(response => response.text())
+      fetch(prestashop.urls.pages.order, {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => {
+          return response.text();
+        })
         .then(html => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
 
-          document.body.innerHTML = doc.body.innerHTML;
+          document.getElementById('opc-delivery-address').innerHTML = doc.body.innerHTML;
           initAddressManagement();
         })
         .catch(error => console.error(error));
