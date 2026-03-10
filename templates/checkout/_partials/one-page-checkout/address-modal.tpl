@@ -124,13 +124,22 @@
        */
       document.getElementById('submit-address-modal').addEventListener('click', function () {
         const container = document.getElementById('address-form-container');
-        const saveBtn = this;
+        container.classList.add('was-validated');
+        let isValid = true;
 
         const formData = new FormData();
         container.querySelectorAll('input, select').forEach(input => {
+          if (input.type !== 'hidden' && !input.checkValidity()) {
+            isValid = false;
+          }
           formData.append(input.name, input.value);
         });
 
+        if (!isValid) {
+          return;
+        }
+
+        const saveBtn = this;
         saveBtn.disabled = true;
         saveBtn.innerHTML = saveBtn.getAttribute('data-loading-text');
 
