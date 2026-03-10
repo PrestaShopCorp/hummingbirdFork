@@ -23,8 +23,6 @@
  *      they appear later in the loop.
  *}
 
-{hook h='displayPersonalInformationTop' customer=$customer}
-
 {include file='_partials/form-errors.tpl' errors=$errors['']}
 
 {*
@@ -36,51 +34,49 @@
 {assign var="_has_city_row" value=isset($formFields['city']) && isset($formFields['postcode'])}
 {assign var="_has_state" value=isset($formFields['id_state'])}
 
-<form id="opc-address-{$type}-form">
-  {* Pass 2 — render each field, grouping into multi-column rows where applicable *}
-  {foreach from=$formFields item="field"}
-    {* ----- alias: always present but never displayed — emit as hidden input ----- *}
-    {if $field.name === 'alias'}
-      <input type="hidden" name="{$field.name}" value="My address">
+{* Pass 2 — render each field, grouping into multi-column rows where applicable *}
+{foreach from=$formFields item="field"}
+  {* ----- alias: always present but never displayed — emit as hidden input ----- *}
+  {if $field.name === 'alias'}
+    <input type="hidden" name="{$field.name}" value="My address">
 
-    {* ----- Fields handled outside this partial (contact section, billing toggle) ----- *}
-    {elseif $field.name === 'email' || $field.name === 'optin' || $field.name === 'use_same_address' || $field.name === 'id_address_invoice'}
-      {* noop — rendered by the parent template *}
+  {* ----- Fields handled outside this partial (contact section, billing toggle) ----- *}
+  {elseif $field.name === 'id_address_invoice'}
+    {* noop — rendered by the parent template *}
 
-    {* ----- Name row: firstname + lastname rendered together in 2 columns ----- *}
-    {* When firstname is encountered first, the whole row (both fields) is output.  *}
-    {* lastname is then skipped below to avoid a duplicate render.                  *}
-    {elseif $field.name === 'firstname' && $_has_name_row}
+  {* ----- Name row: firstname + lastname rendered together in 2 columns ----- *}
+  {* When firstname is encountered first, the whole row (both fields) is output.  *}
+  {* lastname is then skipped below to avoid a duplicate render.                  *}
+  {elseif $field.name === 'firstname' && $_has_name_row}
+    {include file='_partials/form-fields-row.tpl'
+      fields=[$formFields['firstname'], $formFields['lastname']]
+    }
+
+  {elseif $field.name === 'lastname' && $_has_name_row}
+    {* Already rendered with firstname above *}
+
+  {* ----- Location row: city + postcode (+ state if present) in 2 or 3 columns ----- *}
+  {* Same pattern: city triggers the full row; postcode and id_state are skipped.      *}
+  {elseif $field.name === 'city' && $_has_city_row}
+    {if $_has_state}
       {include file='_partials/form-fields-row.tpl'
-        fields=[$formFields['firstname'], $formFields['lastname']]
+        fields=[$formFields['city'], $formFields['id_state'], $formFields['postcode']]
       }
-
-    {elseif $field.name === 'lastname' && $_has_name_row}
-      {* Already rendered with firstname above *}
-
-    {* ----- Location row: city + postcode (+ state if present) in 2 or 3 columns ----- *}
-    {* Same pattern: city triggers the full row; postcode and id_state are skipped.      *}
-    {elseif $field.name === 'city' && $_has_city_row}
-      {if $_has_state}
-        {include file='_partials/form-fields-row.tpl'
-          fields=[$formFields['city'], $formFields['id_state'], $formFields['postcode']]
-        }
-      {else}
-        {include file='_partials/form-fields-row.tpl'
-          fields=[$formFields['city'], $formFields['postcode']]
-        }
-      {/if}
-
-    {elseif $field.name === 'postcode' && $_has_city_row}
-      {* Already rendered with city above *}
-
-    {elseif $field.name === 'id_state' && $_has_city_row}
-      {* Already rendered with city above *}
-
-    {* ----- Default: any other field renders in a single full-width column ----- *}
     {else}
-      {form_field field=$field}
-
+      {include file='_partials/form-fields-row.tpl'
+        fields=[$formFields['city'], $formFields['postcode']]
+      }
     {/if}
-  {/foreach}
-</form>
+
+  {elseif $field.name === 'postcode' && $_has_city_row}
+    {* Already rendered with city above *}
+
+  {elseif $field.name === 'id_state' && $_has_city_row}
+    {* Already rendered with city above *}
+
+  {* ----- Default: any other field renders in a single full-width column ----- *}
+  {else}
+    {form_field field=$field}
+
+  {/if}
+{/foreach}

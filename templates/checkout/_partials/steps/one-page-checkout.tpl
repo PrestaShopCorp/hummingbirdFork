@@ -7,9 +7,11 @@
  * file that was distributed with this source code.
  *}
 
+<form class="one-page-checkout" method="POST" action="{$urls.pages.order}" data-ps-action="form-validation">
+
   <input type="hidden" name="submitOnePageCheckout" value="1">
 
-{render ui=$opc_customer_form}
+  {render ui=$opc_customer_form}
 
   <div class="js-opc-address-form">
     {include file='checkout/_partials/one-page-checkout-address-form.tpl'}
@@ -86,3 +88,4 @@
     {hook h='displayPaymentByBinaries'}
   </div>
 
+</form>

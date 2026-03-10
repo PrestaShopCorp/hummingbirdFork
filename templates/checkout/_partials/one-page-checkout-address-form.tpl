@@ -12,7 +12,7 @@
 <section class="one-page-checkout__section">
   <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
 
-  <section class="form-fields">
+  <section class="form-fields" id="opc-address-delivery-form">
   
     {render ui=$opc_customer_address_form type='delivery'}
     
@@ -31,7 +31,7 @@
 <section class="one-page-checkout__section" id="opc-billing-section" style="display: none;">
   <h2 class="one-page-checkout__title">{l s='Billing address' d='Shop.Theme.Checkout'}</h2>
 
-  <section class="form-fields">
+  <section class="form-fields" id="opc-address-invoice-form">
     {render ui=$opc_customer_address_form type='invoice'}
   </section>
 </section>

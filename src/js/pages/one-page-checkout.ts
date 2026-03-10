@@ -90,7 +90,7 @@ const validateAllForms = () => {
   const useSameAddress = document.querySelector<HTMLInputElement>(OpcMap.useSameAddress)
 
   const invoiceIsValid = useSameAddress?.checked ? true : validateForm(invoiceForm);
-  toggleDisabledPayButton(customerIsValid && deliveryIsValid && invoiceIsValid)
+  toggleDisabledPayButton(!(customerIsValid && deliveryIsValid && invoiceIsValid));
 }
 
 /**
@@ -106,10 +106,10 @@ const validateForm = (form: HTMLFormElement): boolean => {
     const fieldIsValid = isCheckbox ? field.checked : Boolean(field.value?.trim());
 
     if (!fieldIsValid) {
-      return false;
+      isValid = false;
     }
   });
-  return true;
+  return isValid;
 };
 
 export default initOnePageCheckout;
