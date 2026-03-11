@@ -41,7 +41,7 @@
       data-bs-toggle="modal"
       data-bs-target="#address-modal"
       data-type="edit"
-      data-id_address="{$address.id || $address.id_address}"
+      data-id_address="{$address.id}"
       data-alias="{$address.alias|escape:'html':'UTF-8'}"
       data-firstname="{$address.firstname|escape:'html':'UTF-8'}"
       data-lastname="{$address.lastname|escape:'html':'UTF-8'}"

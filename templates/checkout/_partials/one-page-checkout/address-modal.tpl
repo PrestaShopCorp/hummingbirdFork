@@ -212,7 +212,11 @@
         .catch(error => console.error(error));
     }
 
-    document.addEventListener('DOMContentLoaded', initAddressManagement);
+    document.addEventListener('DOMContentLoaded', () => {
+      const countryField = document.getElementById('field-id_country');
+      countryField.classList.remove('js-country');
+      initAddressManagement();
+    });
   </script>
 {/literal}
 {literal}
