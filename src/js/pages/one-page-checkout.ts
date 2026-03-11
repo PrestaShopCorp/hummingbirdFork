@@ -100,7 +100,7 @@ const validateForm = (form: HTMLFormElement): boolean => {
   const requiredFields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
     '[required]',
   );
-
+  let isValid = true;
   requiredFields.forEach((field) => {
     const isCheckbox = field instanceof HTMLInputElement && field.type === 'checkbox';
     const fieldIsValid = isCheckbox ? field.checked : Boolean(field.value?.trim());
