@@ -13,11 +13,8 @@
   <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
 
   <section class="form-fields" id="opc-address-delivery-form">
-  
     {render ui=$opc_customer_address_form type='delivery'}
-    
     <input type="hidden" name="saveAddress" value="delivery">
-
     <div class="form-check">
       <input class="form-check-input js-opc-use-same-address" type="checkbox" id="opc-use-same-address" name="use_same_address" value="1" checked>
       <label class="form-check-label" for="opc-use-same-address">

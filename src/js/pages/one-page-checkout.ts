@@ -53,13 +53,13 @@ const initBillingToggle = () => {
   if (!checkbox || !billingSection) {
     return;
   }
-
   // Remove previous handler to avoid duplicates after DOM refresh
   if (billingToggleHandler) {
     checkbox.removeEventListener('change', billingToggleHandler);
   }
 
   billingToggleHandler = () => {
+    console.log('billingToggleHandler');
     billingSection.style.display = checkbox.checked ? 'none' : '';
     validateAllForms();
   };

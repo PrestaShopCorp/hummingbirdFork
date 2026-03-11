@@ -23,7 +23,7 @@
  *      they appear later in the loop.
  *}
 
-{include file='_partials/form-errors.tpl' errors=$errors['']}
+{include file='_partials/form-errors.tpl' errors=$errors['']|default:[]}
 
 {*
   Pass 1 — pre-compute which grouped rows are available.
@@ -43,6 +43,21 @@
   {* ----- Fields handled outside this partial (contact section, billing toggle) ----- *}
   {elseif $field.name === 'id_address_invoice'}
     {* noop — rendered by the parent template *}
+
+  {elseif $field.name === 'use_same_address'}
+    <div class="form-check">
+      <input
+        class="form-check-input js-opc-use-same-address"
+        type="checkbox"
+        id="opc-use-same-address"
+        name="use_same_address"
+        value="1"
+        {if $field.value|default:false}checked{/if}
+      >
+      <label class="form-check-label" for="opc-use-same-address">
+        {$field.label|default:''}
+      </label>
+    </div>
 
   {* ----- Name row: firstname + lastname rendered together in 2 columns ----- *}
   {* When firstname is encountered first, the whole row (both fields) is output.  *}
