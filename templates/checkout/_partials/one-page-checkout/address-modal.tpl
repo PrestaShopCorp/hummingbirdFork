@@ -151,6 +151,10 @@
           if (input.type !== 'hidden' && !input.checkValidity()) {
             isValid = false;
           }
+          // Skip 'action' field to avoid triggering addressForm refresh instead of save
+          if (input.name === 'action') {
+            return;
+          }
           formData.append(input.name, input.value);
         });
 
@@ -162,14 +166,31 @@
         saveBtn.disabled = true;
         saveBtn.innerHTML = saveBtn.getAttribute('data-loading-text');
 
-        fetch(prestashop.urls.pages.address + '?ajax=1', {
+        fetch(prestashop.urls.pages.order + '?ajax=1&action=saveOpcAddress', {
           method: 'POST',
           body: formData,
           headers: {'X-Requested-With': 'XMLHttpRequest'}
         })
           .then(res => res.json())
           .then(data => {
-            if (data.success || !data.errors) {
+            // Clear previous errors
+            const existingAlert = container.querySelector('.alert-danger');
+            if (existingAlert) existingAlert.remove();
+
+            if (data.errors && data.errors.length > 0) {
+              // Display validation errors
+              const errorHtml = `
+                <div class="alert alert-danger mt-3">
+                  <ul class="mb-0">
+                    ${data.errors.map(err => `<li>${err}</li>`).join('')}
+                  </ul>
+                </div>
+              `;
+              container.querySelector('.modal-body').insertAdjacentHTML('afterbegin', errorHtml);
+              return;
+            }
+
+            if (data.success) {
               $(addressModal).modal('hide');
               renderLoadingState();
               refreshDOM();
@@ -245,6 +266,11 @@
 
         if (!stateSelect || !stateWrapper) {
           console.error('State field not found in DOM');
+          return;
+        }
+
+        if(!countryId) {
+          console.error('No countryId')
           return;
         }
 
