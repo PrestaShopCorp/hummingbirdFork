@@ -19,7 +19,6 @@
         <div class="row">
           <input type="hidden" name="id_address" value="">
           <input type="hidden" name="token" value="{$token}">
-          <input type="hidden" name="action" value="addressForm">
           <input type="hidden" name="submitAddress" value="1">
           {assign var="_key_alias" value="{$prefix}alias"}
           {assign var="_key_id_country" value="{$prefix}id_country"}
@@ -51,13 +50,28 @@
 
           {if isset($formFields[$_key_address2])}{form_field field=$formFields[$_key_address2]}{/if}
 
-          {if isset($formFields[$_key_city]) && isset($formFields[$_key_postcode])}
-            {if isset($formFields[$_key_id_state])}
-              {include file='_partials/form-fields-row.tpl' fields=[$formFields[$_key_city], $formFields[$_key_id_state], $formFields[$_key_postcode]]}
-            {else}
-              {include file='_partials/form-fields-row.tpl' fields=[$formFields[$_key_city], $formFields[$_key_postcode]]}
-            {/if}
-          {/if}
+          <div class="form-fields-row form-fields-row--2" id="address-country-row">
+            {if isset($formFields[$_key_city])}{form_field field=$formFields[$_key_city]}{/if}
+            <div class="form-group mb-3" id="state-field-wrapper" style="{if !isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues)}display: none;{/if}">
+              <label class="form-label required" for="field-id_state">
+                {l s='State' d='Shop.Forms.Labels'}
+              </label>
+              <select
+                class="form-select"
+                name="id_state"
+                id="field-id_state"
+                data-select-placeholder="{l s='-- please choose --' d='Shop.Forms.Labels' js=1}"
+              >
+                <option value="">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
+                {if isset($formFields[$_key_id_state]) && isset($formFields[$_key_id_state].availableValues)}
+                  {foreach from=$formFields[$_key_id_state].availableValues item="label" key="value"}
+                    <option value="{$value}" {if $value eq $formFields[$_key_id_state].value}selected{/if}>{$label}</option>
+                  {/foreach}
+                {/if}
+              </select>
+            </div>
+            {if isset($formFields[$_key_postcode])}{form_field field=$formFields[$_key_postcode]}{/if}
+          </div>
 
           {if isset($formFields[$_key_phone])}{form_field field=$formFields[$_key_phone]}{/if}
         </div>
@@ -87,17 +101,34 @@
       const addressModal = document.getElementById('address-modal');
       if (!addressModal) return;
 
+      addressModal.addEventListener('hidden.bs.modal', () => {
+        const container = document.getElementById('address-form-container');
+        if (!container) return;
+
+        container.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+          el.classList.remove('is-valid', 'is-invalid');
+        });
+        container.querySelectorAll('.field-error').forEach(el => el.remove());
+      });
+
       addressModal.addEventListener('show.bs.modal', (event) => {
+        const modal = event.target;
         const button = event.relatedTarget;
         if (!button) return;
 
+        const countrySelect = button.getAttribute('data-id_country');
+        const stateId = button.getAttribute('data-id_state');
+        if (countrySelect) {
+          selectCountryState(countrySelect, stateId);
+        }
+
         const type = button.getAttribute('data-type');
 
-        const modalTitle = addressModal.querySelector('.modal-header h2');
+        const modalTitle = modal.querySelector('.modal-header h2');
         if (modalTitle) {
           modalTitle.textContent = (type === 'edit')
-            ? addressModal.getAttribute('data-title-edit')
-            : addressModal.getAttribute('data-title-new');
+            ? modal.getAttribute('data-title-edit')
+            : modal.getAttribute('data-title-new');
         }
 
         const fields = [
@@ -107,7 +138,7 @@
         ];
 
         fields.forEach(field => {
-          const input = addressModal.querySelector('[name$="' + field + '"]');
+          const input = modal.querySelector('[name$="' + field + '"]');
           if (input) {
             if (type === 'edit') {
               input.value = button.getAttribute('data-' + field) || '';
@@ -124,13 +155,16 @@
        */
       document.getElementById('submit-address-modal').addEventListener('click', function () {
         const container = document.getElementById('address-form-container');
-        container.classList.add('was-validated');
         let isValid = true;
 
         const formData = new FormData();
+        const skipValidation = ['postcode'];
         container.querySelectorAll('input, select').forEach(input => {
-          if (input.type !== 'hidden' && !input.checkValidity()) {
+          if (input.type !== 'hidden' && !skipValidation.includes(input.name) && !input.checkValidity()) {
+            input.classList.add('is-invalid');
             isValid = false;
+          } else {
+            input.classList.add('is-valid');
           }
           formData.append(input.name, input.value);
         });
@@ -143,15 +177,56 @@
         saveBtn.disabled = true;
         saveBtn.innerHTML = saveBtn.getAttribute('data-loading-text');
 
-        fetch(prestashop.urls.pages.address + '?ajax=1', {
+        fetch(prestashop.urls.pages.order + '?ajax=1&action=saveOpcAddress', {
           method: 'POST',
           body: formData,
           headers: {'X-Requested-With': 'XMLHttpRequest'}
         })
           .then(res => res.json())
           .then(data => {
-            if (data.success || !data.errors) {
+            container.querySelectorAll('.field-error').forEach(fieldError => fieldError.remove());
+            container.querySelectorAll('.is-invalid').forEach(field => field.classList.remove('is-invalid'));
+
+            if (data.errors && Object.keys(data.errors).length > 0) {
+
+              container.querySelectorAll('input:not([type="hidden"]), select').forEach(input => {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+              });
+
+              for (const [fieldName, errors] of Object.entries(data.errors)) {
+                const input = container.querySelector(`[name="${fieldName}"], [name$="${fieldName}"]`);
+                if (input) {
+                  input.classList.remove('is-valid');
+                  input.classList.add('is-invalid');
+                  const formGroup = input.closest('.form-group, .mb-3');
+                  const errorHtml = `
+                    <div class="field-error help-block">
+                      <div class="alert alert-danger mt-2 alert-dismissible" role="alert">
+                        ${errors.length > 1
+                          ? `<ol class="mb-0">${errors.map(e => `<li>${e}</li>`).join('')}</ol>`
+                          : errors[0]
+                        }
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                    </div>
+                  `;
+                  if (formGroup) {
+                    formGroup.insertAdjacentHTML('beforeend', errorHtml);
+                  } else {
+                    input.insertAdjacentHTML('afterend', errorHtml);
+                  }
+                }
+              }
+              return;
+            }
+
+            if (data.success) {
               $(addressModal).modal('hide');
+              container.querySelectorAll('input:not([type="hidden"]), select').forEach(input => {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+              });
               renderLoadingState();
               refreshDOM();
             }
@@ -162,7 +237,6 @@
           .finally(() => {
             saveBtn.disabled = false;
             saveBtn.innerHTML = saveBtn.getAttribute('data-text');
-            container.classList.remove('was-validated');
           })
       });
     }
@@ -207,15 +281,85 @@
           const doc = parser.parseFromString(html, 'text/html');
 
           document.getElementById('opc-delivery-address').innerHTML = doc.body.innerHTML;
-          initAddressManagement();
         })
         .catch(error => console.error(error));
     }
 
+    function fetchStatesByCountry(countryId) {
+      return fetch(`${prestashop.urls.pages.order}?ajax=1&action=getStatesByCountry&id_country=${countryId}`, {
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+      })
+        .then(res => res.json())
+        .catch(err => {
+          console.error('Error fetching states:', err);
+          return { hasStates: false, states: [] };
+        });
+    }
+
+    function updateStateFieldUI(data, stateId = 0) {
+      const stateWrapper = document.getElementById('state-field-wrapper');
+      const stateSelect = document.getElementById('field-id_state');
+      const addressRow = document.getElementById('address-country-row');
+
+      if (!stateWrapper || !stateSelect) return;
+      if (data.hasStates && data.states.length > 0) {
+        if (addressRow) {
+          addressRow.classList.remove('form-fields-row--2');
+          addressRow.classList.add('form-fields-row--3');
+        }
+        stateWrapper.style.display = '';
+        const placeHolderSelect = stateSelect.getAttribute('data-select-placeholder');
+        stateSelect.innerHTML = `<option value="">${placeHolderSelect}</option>`;
+        data.states.forEach(state => {
+          const option = document.createElement('option');
+          option.value = state.id_state;
+          option.textContent = state.name;
+          if(state.id_state == stateId) {
+            option.selected = true;
+          }
+          stateSelect.appendChild(option);
+        });
+        stateSelect.required = true;
+      } else {
+        if (addressRow) {
+          addressRow.classList.remove('form-fields-row--3');
+          addressRow.classList.add('form-fields-row--2');
+        }
+        stateWrapper.style.display = 'none';
+        stateSelect.required = false;
+        stateSelect.value = '';
+      }
+    }
+
+    function selectCountryState(countrySelect, stateId) {
+      const addressModal = document.getElementById('address-modal');
+      if (!addressModal) return;
+      if (!countrySelect) return;
+      fetchStatesByCountry(countrySelect).then((data) => updateStateFieldUI(data, stateId));
+    }
+
+    function initCountryChangeHandler() {
+      const addressModal = document.getElementById('address-modal');
+      if (!addressModal) return;
+
+      const countrySelect = addressModal.querySelector('[name$="id_country"]');
+      if (!countrySelect) return;
+
+      countrySelect.addEventListener('change', (event) => {
+        const countryId = event.target.value;
+        if (!countryId) return;
+
+        fetchStatesByCountry(countryId).then(updateStateFieldUI);
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const countryField = document.getElementById('field-id_country');
-      countryField.classList.remove('js-country');
+      if (countryField) {
+        countryField.classList.remove('js-country');
+      }
       initAddressManagement();
+      initCountryChangeHandler();
     });
   </script>
 {/literal}
