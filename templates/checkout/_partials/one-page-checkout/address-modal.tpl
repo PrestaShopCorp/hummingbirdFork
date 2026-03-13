@@ -105,6 +105,17 @@
       const addressModal = document.getElementById('address-modal');
       if (!addressModal) return;
 
+      addressModal.addEventListener('hidden.bs.modal', () => {
+        const container = document.getElementById('address-form-container');
+        if (!container) return;
+
+        container.classList.remove('was-validated');
+        container.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
+          el.classList.remove('is-valid', 'is-invalid');
+        });
+        container.querySelectorAll('.field-error').forEach(el => el.remove());
+      });
+
       addressModal.addEventListener('show.bs.modal', (event) => {
         const button = event.relatedTarget;
         if (!button) return;
@@ -146,8 +157,9 @@
         let isValid = true;
 
         const formData = new FormData();
+        const skipValidation = ['postcode'];
         container.querySelectorAll('input, select').forEach(input => {
-          if (input.type !== 'hidden' && !input.checkValidity()) {
+          if (input.type !== 'hidden' && !skipValidation.includes(input.name) && !input.checkValidity()) {
             isValid = false;
           }
           formData.append(input.name, input.value);
@@ -266,6 +278,49 @@
         .catch(error => console.error(error));
     }
 
+    function fetchStatesByCountry(countryId) {
+      return fetch(`${prestashop.urls.pages.order}?ajax=1&action=getStatesByCountry&id_country=${countryId}`, {
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+      })
+        .then(res => res.json())
+        .catch(err => {
+          console.error('Error fetching states:', err);
+          return { hasStates: false, states: [] };
+        });
+    }
+
+    function updateStateFieldUI(data) {
+      const stateWrapper = document.getElementById('state-field-wrapper');
+      const stateSelect = document.getElementById('modal-field-id_state');
+      const addressRow = document.getElementById('address-country-row');
+
+      if (!stateWrapper || !stateSelect) return;
+
+      if (data.hasStates && data.states.length > 0) {
+        if (addressRow) {
+          addressRow.classList.remove('form-fields-row--2');
+          addressRow.classList.add('form-fields-row--3');
+        }
+        stateWrapper.style.display = '';
+        stateSelect.innerHTML = `<option value="">${ADDRESS_MODAL_TRANSLATIONS.pleaseChoose}</option>`;
+        data.states.forEach(state => {
+          const option = document.createElement('option');
+          option.value = state.id_state;
+          option.textContent = state.name;
+          stateSelect.appendChild(option);
+        });
+        stateSelect.required = true;
+      } else {
+        if (addressRow) {
+          addressRow.classList.remove('form-fields-row--3');
+          addressRow.classList.add('form-fields-row--2');
+        }
+        stateWrapper.style.display = 'none';
+        stateSelect.required = false;
+        stateSelect.value = '';
+      }
+    }
+
     function selectCountryState() {
       const addressModal = document.getElementById('address-modal');
       if (!addressModal) return;
@@ -273,43 +328,8 @@
       const countrySelect = addressModal.querySelector('[name$="id_country"]');
       if (!countrySelect || !countrySelect.value) return;
 
-      const countryId = countrySelect.value;
-      const stateWrapper = document.getElementById('state-field-wrapper');
-      const stateSelect = document.getElementById('modal-field-id_state');
-
-      if (!stateSelect || !stateWrapper) {
-        return;
-      }
-
-      fetch(`${prestashop.urls.pages.order}?ajax=1&action=getStatesByCountry&id_country=${countryId}`, {
-        headers: {'X-Requested-With': 'XMLHttpRequest'}
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.hasStates && data.states.length > 0) {
-            const addressRow = document.getElementById('address-country-row');
-            if (addressRow) {
-              addressRow.classList.remove('form-fields-row--2');
-              addressRow.classList.add('form-fields-row--3');
-            }
-            stateWrapper.style.display = '';
-            stateSelect.innerHTML = `<option value="">${ADDRESS_MODAL_TRANSLATIONS.pleaseChoose}</option>`;
-            data.states.forEach(state => {
-              const option = document.createElement('option');
-              option.value = state.id_state;
-              option.textContent = state.name;
-              stateSelect.appendChild(option);
-            });
-            stateSelect.required = true;
-          } else {
-            stateWrapper.style.display = 'none';
-            stateSelect.required = false;
-            stateSelect.value = '';
-          }
-        })
-        .catch(err => console.error('Error fetching states:', err));
+      fetchStatesByCountry(countrySelect.value).then(updateStateFieldUI);
     }
-
 
     function initCountryChangeHandler() {
       const addressModal = document.getElementById('address-modal');
@@ -320,53 +340,9 @@
 
       countrySelect.addEventListener('change', (event) => {
         const countryId = event.target.value;
-        const stateWrapper = document.getElementById('state-field-wrapper');
-        const stateSelect = document.getElementById('modal-field-id_state');
+        if (!countryId) return;
 
-        if (!stateSelect || !stateWrapper) {
-          console.error('State field not found in DOM');
-          return;
-        }
-
-        if(!countryId) {
-          console.error('No countryId')
-          return;
-        }
-
-
-
-        fetch(`${prestashop.urls.pages.order}?ajax=1&action=getStatesByCountry&id_country=${countryId}`, {
-          headers: {'X-Requested-With': 'XMLHttpRequest'}
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.hasStates && data.states.length > 0) {
-              const addressRow = document.getElementById('address-country-row');
-              if (addressRow) {
-                addressRow.classList.remove('form-fields-row--2');
-                addressRow.classList.add('form-fields-row--3');
-              }
-              stateWrapper.style.display = '';
-              stateSelect.innerHTML = `<option value="">${ADDRESS_MODAL_TRANSLATIONS.pleaseChoose}</option>`;
-              data.states.forEach(state => {
-                const option = document.createElement('option');
-                option.value = state.id_state;
-                option.textContent = state.name;
-                stateSelect.appendChild(option);
-              });
-              stateSelect.required = true;
-            } else {
-              const addressRow = document.getElementById('address-country-row');
-              if (addressRow) {
-                addressRow.classList.remove('form-fields-row--3');
-                addressRow.classList.add('form-fields-row--2');
-              }
-              stateWrapper.style.display = 'none';
-              stateSelect.required = false;
-              stateSelect.value = '';
-            }
-          })
-          .catch(err => console.error('Error fetching states:', err));
+        fetchStatesByCountry(countryId).then(updateStateFieldUI);
       });
     }
 
