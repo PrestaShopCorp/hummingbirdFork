@@ -53,13 +53,14 @@
           <div class="form-fields-row form-fields-row--2" id="address-country-row">
             {if isset($formFields[$_key_city])}{form_field field=$formFields[$_key_city]}{/if}
             <div class="form-group mb-3" id="state-field-wrapper" style="{if !isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues)}display: none;{/if}">
-              <label class="form-label required" for="modal-field-id_state">
+              <label class="form-label required" for="field-id_state">
                 {l s='State' d='Shop.Forms.Labels'}
               </label>
               <select
                 class="form-select"
                 name="id_state"
-                id="modal-field-id_state"
+                id="field-id_state"
+                data-select-placeholder="{l s='-- please choose --' d='Shop.Forms.Labels' js=1}"
               >
                 <option value="">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
                 {if isset($formFields[$_key_id_state]) && isset($formFields[$_key_id_state].availableValues)}
@@ -89,11 +90,6 @@
     </div>
   </div>
 </div>
-<script>
-  const ADDRESS_MODAL_TRANSLATIONS = {
-    pleaseChoose: "{l s='-- please choose --' d='Shop.Forms.Labels' js=1}"
-  };
-</script>
 {literal}
   <script>
     /**
@@ -109,7 +105,6 @@
         const container = document.getElementById('address-form-container');
         if (!container) return;
 
-        container.classList.remove('was-validated');
         container.querySelectorAll('.is-valid, .is-invalid').forEach(el => {
           el.classList.remove('is-valid', 'is-invalid');
         });
@@ -184,7 +179,6 @@
             container.querySelectorAll('.is-invalid').forEach(field => field.classList.remove('is-invalid'));
 
             if (data.errors && Object.keys(data.errors).length > 0) {
-              container.classList.remove('was-validated');
 
               container.querySelectorAll('input:not([type="hidden"]), select').forEach(input => {
                 input.classList.remove('is-invalid');
@@ -219,7 +213,6 @@
 
             if (data.success) {
               $(addressModal).modal('hide');
-              container.classList.remove('was-validated');
               renderLoadingState();
               refreshDOM();
             }
@@ -291,7 +284,7 @@
 
     function updateStateFieldUI(data) {
       const stateWrapper = document.getElementById('state-field-wrapper');
-      const stateSelect = document.getElementById('modal-field-id_state');
+      const stateSelect = document.getElementById('field-id_state');
       const addressRow = document.getElementById('address-country-row');
 
       if (!stateWrapper || !stateSelect) return;
@@ -302,7 +295,8 @@
           addressRow.classList.add('form-fields-row--3');
         }
         stateWrapper.style.display = '';
-        stateSelect.innerHTML = `<option value="">${ADDRESS_MODAL_TRANSLATIONS.pleaseChoose}</option>`;
+        const placeHolderSelect = stateSelect.getAttribute('data-select-placeholder');
+        stateSelect.innerHTML = `<option value="">${placeHolderSelect}</option>`;
         data.states.forEach(state => {
           const option = document.createElement('option');
           option.value = state.id_state;
