@@ -19,7 +19,6 @@
         <div class="row">
           <input type="hidden" name="id_address" value="">
           <input type="hidden" name="token" value="{$token}">
-          <input type="hidden" name="action" value="addressForm">
           <input type="hidden" name="submitAddress" value="1">
           {assign var="_key_alias" value="{$prefix}alias"}
           {assign var="_key_id_country" value="{$prefix}id_country"}
@@ -51,27 +50,27 @@
 
           {if isset($formFields[$_key_address2])}{form_field field=$formFields[$_key_address2]}{/if}
 
-          {if isset($formFields[$_key_city])}{form_field field=$formFields[$_key_city]}{/if}
-
-          <div class="form-group mb-3" id="state-field-wrapper" style="{if !isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues)}display: none;{/if}">
-            <label class="form-label" for="modal-field-id_state">
-              {l s='State' d='Shop.Forms.Labels'}
-            </label>
-            <select
-              class="form-select"
-              name="id_state"
-              id="modal-field-id_state"
-            >
-              <option value="">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
-              {if isset($formFields[$_key_id_state]) && isset($formFields[$_key_id_state].availableValues)}
-                {foreach from=$formFields[$_key_id_state].availableValues item="label" key="value"}
-                  <option value="{$value}" {if $value eq $formFields[$_key_id_state].value}selected{/if}>{$label}</option>
-                {/foreach}
-              {/if}
-            </select>
+          <div class="form-fields-row form-fields-row--2" id="address-country-row">
+            {if isset($formFields[$_key_city])}{form_field field=$formFields[$_key_city]}{/if}
+            <div class="form-group mb-3" id="state-field-wrapper" style="{if !isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues)}display: none;{/if}">
+              <label class="form-label required" for="modal-field-id_state">
+                {l s='State' d='Shop.Forms.Labels'}
+              </label>
+              <select
+                class="form-select"
+                name="id_state"
+                id="modal-field-id_state"
+              >
+                <option value="">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
+                {if isset($formFields[$_key_id_state]) && isset($formFields[$_key_id_state].availableValues)}
+                  {foreach from=$formFields[$_key_id_state].availableValues item="label" key="value"}
+                    <option value="{$value}" {if $value eq $formFields[$_key_id_state].value}selected{/if}>{$label}</option>
+                  {/foreach}
+                {/if}
+              </select>
+            </div>
+            {if isset($formFields[$_key_postcode])}{form_field field=$formFields[$_key_postcode]}{/if}
           </div>
-
-          {if isset($formFields[$_key_postcode])}{form_field field=$formFields[$_key_postcode]}{/if}
 
           {if isset($formFields[$_key_phone])}{form_field field=$formFields[$_key_phone]}{/if}
         </div>
@@ -151,10 +150,6 @@
           if (input.type !== 'hidden' && !input.checkValidity()) {
             isValid = false;
           }
-          // Skip 'action' field to avoid triggering addressForm refresh instead of save
-          if (input.name === 'action') {
-            return;
-          }
           formData.append(input.name, input.value);
         });
 
@@ -173,25 +168,46 @@
         })
           .then(res => res.json())
           .then(data => {
-            // Clear previous errors
-            const existingAlert = container.querySelector('.alert-danger');
-            if (existingAlert) existingAlert.remove();
+            container.querySelectorAll('.field-error').forEach(fieldError => fieldError.remove());
+            container.querySelectorAll('.is-invalid').forEach(field => field.classList.remove('is-invalid'));
 
-            if (data.errors && data.errors.length > 0) {
-              // Display validation errors
-              const errorHtml = `
-                <div class="alert alert-danger mt-3">
-                  <ul class="mb-0">
-                    ${data.errors.map(err => `<li>${err}</li>`).join('')}
-                  </ul>
-                </div>
-              `;
-              container.querySelector('.modal-body').insertAdjacentHTML('afterbegin', errorHtml);
+            if (data.errors && Object.keys(data.errors).length > 0) {
+              container.classList.remove('was-validated');
+
+              container.querySelectorAll('input:not([type="hidden"]), select').forEach(input => {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+              });
+
+              for (const [fieldName, errors] of Object.entries(data.errors)) {
+                const input = container.querySelector(`[name="${fieldName}"], [name$="${fieldName}"]`);
+                if (input) {
+                  input.classList.add('is-invalid');
+                  const formGroup = input.closest('.form-group, .mb-3');
+                  const errorHtml = `
+                    <div class="field-error help-block">
+                      <div class="alert alert-danger mt-2 alert-dismissible" role="alert">
+                        ${errors.length > 1
+                          ? `<ol class="mb-0">${errors.map(e => `<li>${e}</li>`).join('')}</ol>`
+                          : errors[0]
+                        }
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                    </div>
+                  `;
+                  if (formGroup) {
+                    formGroup.insertAdjacentHTML('beforeend', errorHtml);
+                  } else {
+                    input.insertAdjacentHTML('afterend', errorHtml);
+                  }
+                }
+              }
               return;
             }
 
             if (data.success) {
               $(addressModal).modal('hide');
+              container.classList.remove('was-validated');
               renderLoadingState();
               refreshDOM();
             }
@@ -202,7 +218,6 @@
           .finally(() => {
             saveBtn.disabled = false;
             saveBtn.innerHTML = saveBtn.getAttribute('data-text');
-            container.classList.remove('was-validated');
           })
       });
     }
@@ -251,6 +266,50 @@
         .catch(error => console.error(error));
     }
 
+    function selectCountryState() {
+      const addressModal = document.getElementById('address-modal');
+      if (!addressModal) return;
+
+      const countrySelect = addressModal.querySelector('[name$="id_country"]');
+      if (!countrySelect || !countrySelect.value) return;
+
+      const countryId = countrySelect.value;
+      const stateWrapper = document.getElementById('state-field-wrapper');
+      const stateSelect = document.getElementById('modal-field-id_state');
+
+      if (!stateSelect || !stateWrapper) {
+        return;
+      }
+
+      fetch(`${prestashop.urls.pages.order}?ajax=1&action=getStatesByCountry&id_country=${countryId}`, {
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.hasStates && data.states.length > 0) {
+            const addressRow = document.getElementById('address-country-row');
+            if (addressRow) {
+              addressRow.classList.remove('form-fields-row--2');
+              addressRow.classList.add('form-fields-row--3');
+            }
+            stateWrapper.style.display = '';
+            stateSelect.innerHTML = `<option value="">${ADDRESS_MODAL_TRANSLATIONS.pleaseChoose}</option>`;
+            data.states.forEach(state => {
+              const option = document.createElement('option');
+              option.value = state.id_state;
+              option.textContent = state.name;
+              stateSelect.appendChild(option);
+            });
+            stateSelect.required = true;
+          } else {
+            stateWrapper.style.display = 'none';
+            stateSelect.required = false;
+            stateSelect.value = '';
+          }
+        })
+        .catch(err => console.error('Error fetching states:', err));
+    }
+
 
     function initCountryChangeHandler() {
       const addressModal = document.getElementById('address-modal');
@@ -274,12 +333,19 @@
           return;
         }
 
+
+
         fetch(`${prestashop.urls.pages.order}?ajax=1&action=getStatesByCountry&id_country=${countryId}`, {
           headers: {'X-Requested-With': 'XMLHttpRequest'}
         })
           .then(res => res.json())
           .then(data => {
             if (data.hasStates && data.states.length > 0) {
+              const addressRow = document.getElementById('address-country-row');
+              if (addressRow) {
+                addressRow.classList.remove('form-fields-row--2');
+                addressRow.classList.add('form-fields-row--3');
+              }
               stateWrapper.style.display = '';
               stateSelect.innerHTML = `<option value="">${ADDRESS_MODAL_TRANSLATIONS.pleaseChoose}</option>`;
               data.states.forEach(state => {
@@ -290,6 +356,11 @@
               });
               stateSelect.required = true;
             } else {
+              const addressRow = document.getElementById('address-country-row');
+              if (addressRow) {
+                addressRow.classList.remove('form-fields-row--3');
+                addressRow.classList.add('form-fields-row--2');
+              }
               stateWrapper.style.display = 'none';
               stateSelect.required = false;
               stateSelect.value = '';
@@ -306,6 +377,7 @@
       }
       initAddressManagement();
       initCountryChangeHandler();
+      selectCountryState();
     });
   </script>
 {/literal}
