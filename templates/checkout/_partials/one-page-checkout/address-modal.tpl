@@ -112,16 +112,23 @@
       });
 
       addressModal.addEventListener('show.bs.modal', (event) => {
+        const modal = event.target;
         const button = event.relatedTarget;
         if (!button) return;
 
+        const countrySelect = button.getAttribute('data-id_country');
+        const stateId = button.getAttribute('data-id_state');
+        if (countrySelect) {
+          selectCountryState(countrySelect, stateId);
+        }
+
         const type = button.getAttribute('data-type');
 
-        const modalTitle = addressModal.querySelector('.modal-header h2');
+        const modalTitle = modal.querySelector('.modal-header h2');
         if (modalTitle) {
           modalTitle.textContent = (type === 'edit')
-            ? addressModal.getAttribute('data-title-edit')
-            : addressModal.getAttribute('data-title-new');
+            ? modal.getAttribute('data-title-edit')
+            : modal.getAttribute('data-title-new');
         }
 
         const fields = [
@@ -131,7 +138,7 @@
         ];
 
         fields.forEach(field => {
-          const input = addressModal.querySelector('[name$="' + field + '"]');
+          const input = modal.querySelector('[name$="' + field + '"]');
           if (input) {
             if (type === 'edit') {
               input.value = button.getAttribute('data-' + field) || '';
@@ -148,14 +155,16 @@
        */
       document.getElementById('submit-address-modal').addEventListener('click', function () {
         const container = document.getElementById('address-form-container');
-        container.classList.add('was-validated');
         let isValid = true;
 
         const formData = new FormData();
         const skipValidation = ['postcode'];
         container.querySelectorAll('input, select').forEach(input => {
           if (input.type !== 'hidden' && !skipValidation.includes(input.name) && !input.checkValidity()) {
+            input.classList.add('is-invalid');
             isValid = false;
+          } else {
+            input.classList.add('is-valid');
           }
           formData.append(input.name, input.value);
         });
@@ -188,6 +197,7 @@
               for (const [fieldName, errors] of Object.entries(data.errors)) {
                 const input = container.querySelector(`[name="${fieldName}"], [name$="${fieldName}"]`);
                 if (input) {
+                  input.classList.remove('is-valid');
                   input.classList.add('is-invalid');
                   const formGroup = input.closest('.form-group, .mb-3');
                   const errorHtml = `
@@ -213,6 +223,10 @@
 
             if (data.success) {
               $(addressModal).modal('hide');
+              container.querySelectorAll('input:not([type="hidden"]), select').forEach(input => {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+              });
               renderLoadingState();
               refreshDOM();
             }
@@ -282,13 +296,12 @@
         });
     }
 
-    function updateStateFieldUI(data) {
+    function updateStateFieldUI(data, stateId = 0) {
       const stateWrapper = document.getElementById('state-field-wrapper');
       const stateSelect = document.getElementById('field-id_state');
       const addressRow = document.getElementById('address-country-row');
 
       if (!stateWrapper || !stateSelect) return;
-
       if (data.hasStates && data.states.length > 0) {
         if (addressRow) {
           addressRow.classList.remove('form-fields-row--2');
@@ -301,6 +314,9 @@
           const option = document.createElement('option');
           option.value = state.id_state;
           option.textContent = state.name;
+          if(state.id_state == stateId) {
+            option.selected = true;
+          }
           stateSelect.appendChild(option);
         });
         stateSelect.required = true;
@@ -315,14 +331,11 @@
       }
     }
 
-    function selectCountryState() {
+    function selectCountryState(countrySelect, stateId) {
       const addressModal = document.getElementById('address-modal');
       if (!addressModal) return;
-
-      const countrySelect = addressModal.querySelector('[name$="id_country"]');
-      if (!countrySelect || !countrySelect.value) return;
-
-      fetchStatesByCountry(countrySelect.value).then(updateStateFieldUI);
+      if (!countrySelect) return;
+      fetchStatesByCountry(countrySelect).then((data) => updateStateFieldUI(data, stateId));
     }
 
     function initCountryChangeHandler() {
@@ -347,7 +360,6 @@
       }
       initAddressManagement();
       initCountryChangeHandler();
-      selectCountryState();
     });
   </script>
 {/literal}
