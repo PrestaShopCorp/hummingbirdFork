@@ -51,13 +51,27 @@
 
           {if isset($formFields[$_key_address2])}{form_field field=$formFields[$_key_address2]}{/if}
 
-          {if isset($formFields[$_key_city]) && isset($formFields[$_key_postcode])}
-            {if isset($formFields[$_key_id_state])}
-              {include file='_partials/form-fields-row.tpl' fields=[$formFields[$_key_city], $formFields[$_key_id_state], $formFields[$_key_postcode]]}
-            {else}
-              {include file='_partials/form-fields-row.tpl' fields=[$formFields[$_key_city], $formFields[$_key_postcode]]}
-            {/if}
-          {/if}
+          {if isset($formFields[$_key_city])}{form_field field=$formFields[$_key_city]}{/if}
+
+          <div class="form-group mb-3" id="state-field-wrapper" style="{if !isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues)}display: none;{/if}">
+            <label class="form-label" for="modal-field-id_state">
+              {l s='State' d='Shop.Forms.Labels'}
+            </label>
+            <select
+              class="form-select"
+              name="id_state"
+              id="modal-field-id_state"
+            >
+              <option value="">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
+              {if isset($formFields[$_key_id_state]) && isset($formFields[$_key_id_state].availableValues)}
+                {foreach from=$formFields[$_key_id_state].availableValues item="label" key="value"}
+                  <option value="{$value}" {if $value eq $formFields[$_key_id_state].value}selected{/if}>{$label}</option>
+                {/foreach}
+              {/if}
+            </select>
+          </div>
+
+          {if isset($formFields[$_key_postcode])}{form_field field=$formFields[$_key_postcode]}{/if}
 
           {if isset($formFields[$_key_phone])}{form_field field=$formFields[$_key_phone]}{/if}
         </div>
@@ -76,6 +90,11 @@
     </div>
   </div>
 </div>
+<script>
+  const ADDRESS_MODAL_TRANSLATIONS = {
+    pleaseChoose: "{l s='-- please choose --' d='Shop.Forms.Labels' js=1}"
+  };
+</script>
 {literal}
   <script>
     /**
@@ -212,10 +231,56 @@
         .catch(error => console.error(error));
     }
 
+
+    function initCountryChangeHandler() {
+      const addressModal = document.getElementById('address-modal');
+      if (!addressModal) return;
+
+      const countrySelect = addressModal.querySelector('[name$="id_country"]');
+      if (!countrySelect) return;
+
+      countrySelect.addEventListener('change', (event) => {
+        const countryId = event.target.value;
+        const stateWrapper = document.getElementById('state-field-wrapper');
+        const stateSelect = document.getElementById('modal-field-id_state');
+
+        if (!stateSelect || !stateWrapper) {
+          console.error('State field not found in DOM');
+          return;
+        }
+
+        fetch(`${prestashop.urls.pages.order}?ajax=1&action=getStatesByCountry&id_country=${countryId}`, {
+          headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.hasStates && data.states.length > 0) {
+              stateWrapper.style.display = '';
+              stateSelect.innerHTML = `<option value="">${ADDRESS_MODAL_TRANSLATIONS.pleaseChoose}</option>`;
+              data.states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state.id_state;
+                option.textContent = state.name;
+                stateSelect.appendChild(option);
+              });
+              stateSelect.required = true;
+            } else {
+              stateWrapper.style.display = 'none';
+              stateSelect.required = false;
+              stateSelect.value = '';
+            }
+          })
+          .catch(err => console.error('Error fetching states:', err));
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const countryField = document.getElementById('field-id_country');
-      countryField.classList.remove('js-country');
+      if (countryField) {
+        countryField.classList.remove('js-country');
+      }
       initAddressManagement();
+      initCountryChangeHandler();
     });
   </script>
 {/literal}
