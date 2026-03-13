@@ -57,7 +57,6 @@
             <label class="form-label" for="modal-field-id_state">
               {l s='State' d='Shop.Forms.Labels'}
             </label>
-            {(!isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues))|var_dump}
             <select
               class="form-select"
               name="id_state"
