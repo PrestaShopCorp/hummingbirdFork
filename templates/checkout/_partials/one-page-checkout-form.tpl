@@ -26,18 +26,25 @@
       </a>
     </div>
 
-    {if isset($formFields['email'])}
+    {if isset($contactFields['email'])}
       <div class="one-page-checkout__field">
         <label class="form-label" for="field-email">{l s='Continue as guest' d='Shop.Theme.Checkout'}</label>
-        <input class="form-control" type="email" name="email" id="field-email" value="{$formFields['email']['value']}" required>
+        <input class="form-control" type="email" name="email" id="field-email" value="{$contactFields['email']['value']}" required>
       </div>
     {/if}
 
-    {if isset($formFields['optin'])}
+    {if isset($contactFields['optin'])}
       <div class="one-page-checkout__field">
-        {form_field field=$formFields['optin']}
+        {form_field field=$contactFields['optin']}
       </div>
     {/if}
+
+    {foreach from=$additionalCustomerFields item="field"}
+      <div class="one-page-checkout__field">
+        {form_field field=$field}
+      </div>
+    {/foreach}
+
   </section>
 {else}
   <section class="one-page-checkout__section">
@@ -51,7 +58,7 @@
 
   <section id="opc-delivery-address" class="form-fields" data-loading-text="{l s='Loading delivery address...' d='Shop.Theme.Checkout'}">
     {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
-      formFields=$formFields
+      formFields=$deliveryFields
       prefix=''
     }
 
@@ -72,7 +79,7 @@
 
   <section class="form-fields">
     {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
-      formFields=$formFields
+      formFields=$invoiceFields
       prefix='invoice_'
     }
   </section>
