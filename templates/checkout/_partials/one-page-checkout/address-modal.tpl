@@ -273,6 +273,11 @@
       formData.append('ajax', '1');
       formData.append('action', 'opcAddressesList');
 
+      const addressModal = document.getElementById('address-modal');
+      const addressTypeInput = addressModal.querySelector('[name$="address_type"]');
+      const addressTypeValue = addressTypeInput ? addressTypeInput.value : 'delivery';
+      formData.append('address_type', addressTypeValue);
+
       fetch(prestashop.urls.pages.order, {
         method: 'POST',
         body: formData,
@@ -284,7 +289,12 @@
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
 
-          document.getElementById('opc-delivery-address').innerHTML = doc.body.innerHTML;
+          let targetContainerId = 'opc-delivery-address';
+          if (addressTypeValue === 'invoice') {
+            targetContainerId = 'opc-billing-section';
+          }
+
+          document.getElementById(targetContainerId).innerHTML = doc.body.innerHTML;
         })
         .catch(error => console.error(error));
     }
