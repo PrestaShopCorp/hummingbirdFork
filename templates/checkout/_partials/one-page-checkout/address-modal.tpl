@@ -19,20 +19,19 @@
         <div class="row">
           <input type="hidden" name="id_address" value="">
           <input type="hidden" name="token" value="{$token}">
-          <input type="hidden" name="submitAddress" value="1">
-          {assign var="_key_alias" value="{$prefix}alias"}
-          {assign var="_key_id_country" value="{$prefix}id_country"}
-          {assign var="_key_firstname" value="{$prefix}firstname"}
-          {assign var="_key_lastname" value="{$prefix}lastname"}
-          {assign var="_key_company" value="{$prefix}company"}
-          {assign var="_key_vat_number" value="{$prefix}vat_number"}
-          {assign var="_key_address1" value="{$prefix}address1"}
-          {assign var="_key_address2" value="{$prefix}address2"}
-          {assign var="_key_city" value="{$prefix}city"}
-          {assign var="_key_postcode" value="{$prefix}postcode"}
-          {assign var="_key_id_state" value="{$prefix}id_state"}
-          {assign var="_key_phone" value="{$prefix}phone"}
-
+          <input type="hidden" name="address_type" value="">
+          {assign var="_key_alias" value="alias"}
+          {assign var="_key_id_country" value="id_country"}
+          {assign var="_key_firstname" value="firstname"}
+          {assign var="_key_lastname" value="lastname"}
+          {assign var="_key_company" value="company"}
+          {assign var="_key_vat_number" value="vat_number"}
+          {assign var="_key_address1" value="address1"}
+          {assign var="_key_address2" value="address2"}
+          {assign var="_key_city" value="city"}
+          {assign var="_key_postcode" value="postcode"}
+          {assign var="_key_id_state" value="id_state"}
+          {assign var="_key_phone" value="phone"}
 
           {if isset($formFields[$_key_alias])}{form_field field=$formFields[$_key_alias]}{/if}
 
@@ -134,7 +133,8 @@
         const fields = [
           'id_address', 'alias', 'firstname', 'lastname',
           'company', 'vat_number', 'address1', 'address2',
-          'city', 'postcode', 'id_state', 'id_country', 'phone'
+          'city', 'postcode', 'id_state', 'id_country', 'phone',
+          'address_type'
         ];
 
         fields.forEach(field => {
@@ -176,6 +176,10 @@
         const saveBtn = this;
         saveBtn.disabled = true;
         saveBtn.innerHTML = saveBtn.getAttribute('data-loading-text');
+
+        const checkbox = document.querySelector('#opc-use-same-address');
+        const isUseSameAddress = (checkbox && checkbox.checked) ? 1 : 0;
+        formData.append('use_same_address', isUseSameAddress);
 
         fetch(prestashop.urls.pages.order + '?ajax=1&action=saveOpcAddress', {
           method: 'POST',

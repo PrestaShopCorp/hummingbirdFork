@@ -10,7 +10,7 @@
 {hook h='displayPersonalInformationTop' customer=$customer}
 
 {include file='_partials/form-errors.tpl' errors=$errors['']}
-{include file='checkout/_partials/one-page-checkout/address-modal.tpl' formFields=$formFields prefix=''}
+{include file='checkout/_partials/one-page-checkout/address-modal.tpl' formFields=$formFields}
 
 {* ===== Contact information ===== *}
 {if !$customer.is_logged}
