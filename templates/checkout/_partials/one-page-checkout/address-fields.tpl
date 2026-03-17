@@ -63,9 +63,9 @@
   {if $_base === 'alias'}
     <input type="hidden" name="{$field.name}" value="My address">
 
-    {* ----- Name row: firstname + lastname rendered together in 2 columns ----- *}
-    {* When firstname is encountered first, the whole row (both fields) is output.  *}
-    {* lastname is then skipped below to avoid a duplicate render.                  *}
+  {* ----- Name row: firstname + lastname rendered together in 2 columns ----- *}
+  {* When firstname is encountered first, the whole row (both fields) is output.  *}
+  {* lastname is then skipped below to avoid a duplicate render.                  *}
   {elseif $_base === 'firstname' && $_has_name_row}
     {include file='_partials/form-fields-row.tpl'
       fields=[$formFields[$_key_firstname], $formFields[$_key_lastname]]
