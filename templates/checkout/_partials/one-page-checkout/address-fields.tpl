@@ -30,7 +30,6 @@
 
 {* ===== Prefix length for stripping ===== *}
 {assign var="_prefix_len" value=$prefix|strlen}
-
 {* ===== Build prefixed key names ===== *}
 {assign var="_key_firstname" value="{$prefix}firstname"}
 {assign var="_key_lastname" value="{$prefix}lastname"}
@@ -64,31 +63,27 @@
   {if $_base === 'alias'}
     <input type="hidden" name="{$field.name}" value="My address">
 
-    {* ----- Fields handled outside this partial (contact section, billing toggle) ----- *}
-  {elseif $_base === 'email' || $_base === 'optin' || $_base === 'use_same_address' || $_base === 'id_address_invoice'}
-    {* noop — rendered by the parent template *}
-
     {* ----- Name row: firstname + lastname rendered together in 2 columns ----- *}
     {* When firstname is encountered first, the whole row (both fields) is output.  *}
     {* lastname is then skipped below to avoid a duplicate render.                  *}
   {elseif $_base === 'firstname' && $_has_name_row}
     {include file='_partials/form-fields-row.tpl'
-    fields=[$formFields[$_key_firstname], $formFields[$_key_lastname]]
+      fields=[$formFields[$_key_firstname], $formFields[$_key_lastname]]
     }
 
   {elseif $_base === 'lastname' && $_has_name_row}
     {* Already rendered with firstname above *}
 
-    {* ----- Location row: city + postcode (+ state if present) in 2 or 3 columns ----- *}
-    {* Same pattern: city triggers the full row; postcode and id_state are skipped.      *}
+  {* ----- Location row: city + postcode (+ state if present) in 2 or 3 columns ----- *}
+  {* Same pattern: city triggers the full row; postcode and id_state are skipped.      *}
   {elseif $_base === 'city' && $_has_city_row}
     {if $_has_state}
       {include file='_partials/form-fields-row.tpl'
-      fields=[$formFields[$_key_city], $formFields[$_key_id_state], $formFields[$_key_postcode]]
+        fields=[$formFields[$_key_city], $formFields[$_key_id_state], $formFields[$_key_postcode]]
       }
     {else}
       {include file='_partials/form-fields-row.tpl'
-      fields=[$formFields[$_key_city], $formFields[$_key_postcode]]
+        fields=[$formFields[$_key_city], $formFields[$_key_postcode]]
       }
     {/if}
 
@@ -98,7 +93,7 @@
   {elseif $_base === 'id_state' && $_has_city_row}
     {* Already rendered with city above *}
 
-    {* ----- Default: any other field renders in a single full-width column ----- *}
+  {* ----- Default: any other field renders in a single full-width column ----- *}
   {else}
     {form_field field=$field}
 
