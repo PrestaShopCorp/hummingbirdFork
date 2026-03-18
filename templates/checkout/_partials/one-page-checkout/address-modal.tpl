@@ -254,9 +254,7 @@
       `;
 
       const containerIds = [
-        'opc-delivery-address',
-        'opc-delivery-methods',
-        'opc-payment-methods'
+        'opc-delivery-address-fields',
       ];
 
       containerIds.forEach(id => {
@@ -289,7 +287,7 @@
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
 
-          let targetContainerId = 'opc-delivery-address';
+          let targetContainerId = 'opc-delivery-address-fields';
           if (addressTypeValue === 'invoice') {
             targetContainerId = 'opc-billing-section';
           }

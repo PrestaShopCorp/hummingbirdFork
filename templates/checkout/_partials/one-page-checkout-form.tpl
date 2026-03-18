@@ -57,11 +57,12 @@
   <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
 
   <section id="opc-delivery-address" class="form-fields" data-loading-text="{l s='Loading delivery address...' d='Shop.Theme.Checkout'}">
-    {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
-      formFields=$deliveryFields
-      prefix=''
-    }
-
+    <div id="opc-delivery-address-fields">
+      {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
+        formFields=$deliveryFields
+        prefix=''
+      }
+    </div>
     <input type="hidden" name="saveAddress" value="delivery">
 
     <div class="form-check">
