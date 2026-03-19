@@ -56,13 +56,18 @@
 <section class="one-page-checkout__section">
   <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
 
-  <section id="opc-delivery-address" class="form-fields" data-loading-text="{l s='Loading delivery address...' d='Shop.Theme.Checkout'}">
+  <section id="opc-delivery-address" class="form-fields">
     <div id="opc-delivery-address-fields">
       {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
         formFields=$deliveryFields
         prefix=''
       }
     </div>
+    <template id="opc-delivery-address-loader">
+      {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'
+      message={l s='Loading delivery address...' d='Shop.Theme.Checkout'}
+      }
+    </template>
     <input type="hidden" name="saveAddress" value="delivery">
 
     <div class="form-check">
@@ -79,10 +84,17 @@
   <h2 class="one-page-checkout__title">{l s='Billing address' d='Shop.Theme.Checkout'}</h2>
 
   <section class="form-fields">
+    <div id="opc-billing-address-fields">
     {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
       formFields=$invoiceFields
       prefix='invoice_'
     }
+    </div>
+    <template id="opc-billing-address-loader">
+      {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'
+      message={l s='Loading billing address...' d='Shop.Theme.Checkout'}
+      }
+    </template>
   </section>
 </section>
 

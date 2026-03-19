@@ -34,7 +34,7 @@
 
     {hook h='displayPaymentTop'}
 
-    <div class="one-page-checkout__placeholder" id="opc-payment-methods" data-loading-text="{l s='Loading payment methods...' d='Shop.Theme.Checkout'}">
+    <div class="one-page-checkout__placeholder" id="opc-payment-methods" d='Shop.Theme.Checkout'}">
       <div class="card card-body bg-light">
         {l s='You will see the available payment methods once you\'ve entered your delivery address.' d='Shop.Theme.Checkout'}
       </div>
