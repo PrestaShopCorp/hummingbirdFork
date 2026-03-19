@@ -19,13 +19,16 @@
 const initOnePageCheckout = (): void => {
   const {prestashop, Theme} = window;
 
-  // Account created toast: displayed once after returning from registration via `back=...`
+  // Convert account-created success notification into a toast on OPC return.
   const toastTriggerEl = document.querySelector<HTMLElement>('#js-account-created-toast');
+  const successAlert = document.querySelector<HTMLElement>('#notifications .alert-success');
+  const toastMessage = toastTriggerEl?.dataset.message?.trim();
+  const successMessage = successAlert?.textContent?.trim();
 
-  if (toastTriggerEl?.dataset.show === '1') {
-    const toastMessage = toastTriggerEl.dataset.message || 'Account successfully created';
+  if (toastMessage && successMessage && successMessage.includes(toastMessage)) {
     const toast = Theme?.components?.useToast?.(toastMessage, {type: 'success'});
     toast?.show?.();
+    successAlert?.remove();
   }
 
   // Preserve Bootstrap accordion open state across cart summary DOM replacements.
