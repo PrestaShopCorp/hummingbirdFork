@@ -10,7 +10,25 @@
 {hook h='displayPersonalInformationTop' customer=$customer}
 
 {include file='_partials/form-errors.tpl' errors=$errors['']}
-{include file='checkout/_partials/one-page-checkout/address-modal.tpl' formFields=$formFields}
+{* Delivery Address Modal *}
+{include file='checkout/_partials/one-page-checkout/address-modal.tpl'
+modal_id='modal-delivery'
+formFields=$deliveryFields
+title_new={l s='New delivery address' d='Shop.Theme.Checkout'}
+title_edit={l s='Edit delivery address' d='Shop.Theme.Checkout'}
+address_type='delivery'
+prefix=''
+}
+
+{* Billing Address Modal *}
+{include file='checkout/_partials/one-page-checkout/address-modal.tpl'
+modal_id='modal-invoice'
+formFields=$invoiceFields
+title_new={l s='New billing address' d='Shop.Theme.Checkout'}
+title_edit={l s='Edit billing address' d='Shop.Theme.Checkout'}
+address_type='invoice'
+prefix='invoice_'
+}
 
 {* ===== Contact information ===== *}
 {if !$customer.is_logged}

@@ -1,17 +1,17 @@
 <div
-  id="address-modal"
+  id="{$modal_id}"
   class="modal fade"
   tabindex="-1"
   role="dialog"
   aria-labelledby="address-modal-title"
   aria-hidden="true"
-  data-title-new="{l s='New Delivery Address' d='Shop.Theme.Checkout'}"
-  data-title-edit="{l s='Edit Delivery Address' d='Shop.Theme.Checkout'}"
+  data-title-new="{$title_new}"
+  data-title-edit="{$title_edit}"
 >
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
     <div id="address-form-container" class="modal-content">
       <div class="modal-header pb-2">
-        <h2 class="mb-0">Modal Header</h2>
+        <h2 class="mb-0">{$title_new}</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <hr>
@@ -19,19 +19,19 @@
         <div class="row">
           <input type="hidden" name="id_address" value="">
           <input type="hidden" name="token" value="{$token}">
-          <input type="hidden" name="address_type" value="">
-          {assign var="_key_alias" value="alias"}
-          {assign var="_key_id_country" value="id_country"}
-          {assign var="_key_firstname" value="firstname"}
-          {assign var="_key_lastname" value="lastname"}
-          {assign var="_key_company" value="company"}
-          {assign var="_key_vat_number" value="vat_number"}
-          {assign var="_key_address1" value="address1"}
-          {assign var="_key_address2" value="address2"}
-          {assign var="_key_city" value="city"}
-          {assign var="_key_postcode" value="postcode"}
-          {assign var="_key_id_state" value="id_state"}
-          {assign var="_key_phone" value="phone"}
+          <input type="hidden" name="address_type" value="{$address_type}">
+          {assign var="_key_alias" value="{$prefix}alias"}
+          {assign var="_key_id_country" value="{$prefix}id_country"}
+          {assign var="_key_firstname" value="{$prefix}firstname"}
+          {assign var="_key_lastname" value="{$prefix}lastname"}
+          {assign var="_key_company" value="{$prefix}company"}
+          {assign var="_key_vat_number" value="{$prefix}vat_number"}
+          {assign var="_key_address1" value="{$prefix}address1"}
+          {assign var="_key_address2" value="{$prefix}address2"}
+          {assign var="_key_city" value="{$prefix}city"}
+          {assign var="_key_postcode" value="{$prefix}postcode"}
+          {assign var="_key_id_state" value="{$prefix}id_state"}
+          {assign var="_key_phone" value="{$prefix}phone"}
 
           {if isset($formFields[$_key_alias])}{form_field field=$formFields[$_key_alias]}{/if}
 

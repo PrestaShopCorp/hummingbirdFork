@@ -113,9 +113,8 @@
       type="button"
       class="btn btn-primary"
       data-bs-toggle="modal"
-      data-bs-target="#address-modal"
+      data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
       data-type="edit"
-      data-address_type="{if $prefix == 'invoice_'}invoice{else}delivery{/if}"
       data-id_address="{$address.id}"
       data-alias="{$address.alias|escape:'html':'UTF-8'}"
       data-firstname="{$address.firstname|escape:'html':'UTF-8'}"
@@ -140,9 +139,8 @@
   type="button"
   class="btn btn-primary"
   data-bs-toggle="modal"
-  data-bs-target="#address-modal"
+  data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
   data-type="create"
-  data-address_type="{if $prefix == 'invoice_'}invoice{else}delivery{/if}"
 >
   {l s='Add new address' d='Shop.Theme.Actions'}
 </button>
