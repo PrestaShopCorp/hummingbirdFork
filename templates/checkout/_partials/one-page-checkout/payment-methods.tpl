@@ -1,6 +1,6 @@
 {**
  * OPC — Payment methods list partial (AJAX refresh)
- * Variables: $payment_options, $is_free, $selected_payment_option
+ * Variables: $payment_options, $is_free, $selected_payment_module
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,7 +19,7 @@
           data-module-name="{$option.module_name}"
           id="{$option.id}"
           value="{$option.id}"
-          {if ($selected_payment_option == $option.id || $is_free) || ($payment_options|@count === 1 && $module_options|@count === 1)} checked {/if}
+          {if ($selected_payment_module == $option.module_name || $is_free) || ($payment_options|@count === 1 && $module_options|@count === 1)} checked {/if}
         >
         <label class="payment-option__label form-check-label" for="{$option.id}">
           {if $option.logo}
@@ -34,7 +34,7 @@
         <div
           id="{$option.id}-additional-information"
           class="payment-option__additional-information js-additional-information"
-          {if $option.id != $selected_payment_option}style="display: none;"{/if}
+          {if $option.module_name != $selected_payment_module}style="display: none;"{/if}
         >
           {$option.additionalInformation nofilter}
         </div>
@@ -44,7 +44,7 @@
       <div
         id="pay-with-{$option.id}-form"
         class="js-payment-option-form"
-        {if $option.id != $selected_payment_option}style="display: none;"{/if}
+        {if $option.module_name != $selected_payment_module}style="display: none;"{/if}
       >
         {if $option.form}
           {$option.form nofilter}

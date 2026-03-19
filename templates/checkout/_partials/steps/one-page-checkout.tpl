@@ -32,8 +32,7 @@
   {include file='checkout/_partials/one-page-checkout/payment-section.tpl'
     payment_options=$payment_options|default:[]
     is_free=$is_free|default:false
-    selected_payment_option=$selected_payment_option|default:''
-    conditions_to_approve=$conditions_to_approve|default:[]
+    selected_payment_module=$selected_payment_module|default:''
   }
 
   <div class="one-page-checkout__footer">

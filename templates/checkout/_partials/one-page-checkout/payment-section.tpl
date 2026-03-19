@@ -6,7 +6,7 @@
  * Variables:
  *   $payment_options          - available payment options (may be empty on first load)
  *   $is_free                  - boolean, true when cart total is 0
- *   $selected_payment_option  - ID of the currently selected payment option
+ *   $selected_payment_module  - module_name of the currently selected payment option (stable across renders)
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,7 +24,7 @@
       {include file='checkout/_partials/one-page-checkout/payment-methods.tpl'
         payment_options=$payment_options
         is_free=$is_free
-        selected_payment_option=$selected_payment_option
+        selected_payment_module=$selected_payment_module
       }
     {else}
       <div class="card card-body bg-light">
@@ -32,8 +32,6 @@
       </div>
     {/if}
   </div>
-
-  {hook h='displayCheckoutBeforeConfirmation'}
 
   <template id="opc-template-payment-loader">
     {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'
