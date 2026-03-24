@@ -17,7 +17,16 @@
  */
 
 const initOnePageCheckout = (): void => {
-  const {prestashop} = window;
+  const {prestashop, Theme} = window;
+
+  // Account created toast: displayed once after returning from registration via `back=...`
+  const toastTriggerEl = document.querySelector<HTMLElement>('#js-account-created-toast');
+
+  if (toastTriggerEl?.dataset.show === '1') {
+    const toastMessage = toastTriggerEl.dataset.message || 'Account successfully created';
+    const toast = Theme?.components?.useToast?.(toastMessage, {type: 'success'});
+    toast?.show?.();
+  }
 
   // Preserve Bootstrap accordion open state across cart summary DOM replacements.
   let openCollapseIds: string[] = [];
