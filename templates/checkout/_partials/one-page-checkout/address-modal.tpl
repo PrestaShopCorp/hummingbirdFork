@@ -9,7 +9,7 @@
   data-title-edit="{$title_edit}"
 >
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-    <div id="address-form-container" class="modal-content">
+    <div class="modal-content address-form-container">
       <div class="modal-header pb-2">
         <h2 class="mb-0">{$title_new}</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -49,9 +49,9 @@
 
           {if isset($formFields[$_key_address2])}{form_field field=$formFields[$_key_address2]}{/if}
 
-          <div class="form-fields-row form-fields-row--2" id="address-country-row">
+          <div class="form-fields-row form-fields-row--2 address-country-row">
             {if isset($formFields[$_key_city])}{form_field field=$formFields[$_key_city]}{/if}
-            <div class="form-group mb-3" id="state-field-wrapper" style="{if !isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues)}display: none;{/if}">
+            <div class="form-group mb-3 state-field-wrapper" style="{if !isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues)}display: none;{/if}">
               <label class="form-label required" for="field-id_state">
                 {l s='State' d='Shop.Forms.Labels'}
               </label>
