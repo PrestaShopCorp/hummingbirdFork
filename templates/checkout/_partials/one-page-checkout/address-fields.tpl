@@ -144,13 +144,14 @@
   </div>
   <hr>
 {/foreach}
-
-<button
-  type="button"
-  class="btn btn-primary"
-  data-bs-toggle="modal"
-  data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
-  data-type="create"
->
-  {l s='Add new address' d='Shop.Theme.Actions'}
-</button>
+{if $customer.addresses|count > 0}
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
+    data-type="create"
+  >
+    {l s='Add new address' d='Shop.Theme.Actions'}
+  </button>
+{/if}
