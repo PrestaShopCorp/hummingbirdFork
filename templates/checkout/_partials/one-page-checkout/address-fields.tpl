@@ -136,6 +136,7 @@
       class="btn btn-outline-danger js-delete-address"
       data-id-address="{$address.id}"
       data-address-type="{if $prefix == 'invoice_'}invoice{else}delivery{/if}"
+      data-confirm-message="{l s='Are you sure you want to delete this address?' d='Shop.Theme.Checkout'}"
       title="{l s='Delete' d='Shop.Theme.Actions'}"
     >
       <i class="material-icons">delete</i> {l s='Delete' d='Shop.Theme.Actions'}
