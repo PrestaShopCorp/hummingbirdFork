@@ -76,6 +76,7 @@ prefix='invoice_'
 
   <section id="opc-delivery-address" class="form-fields">
     <div id="opc-delivery-address-content">
+      {if $customer.addresses|count > 0}
       <div id="opc-delivery-address-content-list">
         {include file='checkout/_partials/one-page-checkout/address-list.tpl'
           formFields=$deliveryFields
@@ -83,7 +84,8 @@ prefix='invoice_'
           selected_address=$cart.id_address_delivery
         }
       </div>
-      <div id="opc-delivery-address-content-fields" class="d-none">
+      {/if}
+      <div id="opc-delivery-address-content-fields" class="{if $customer.addresses|count > 1}d-none{/if}">
         {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
           formFields=$deliveryFields
           prefix=''
@@ -112,6 +114,7 @@ prefix='invoice_'
 
   <section class="form-fields">
     <div id="opc-billing-address-content">
+      {if $customer.addresses|count > 1}
       <div id="opc-billing-address-content-list">
         {include file='checkout/_partials/one-page-checkout/address-list.tpl'
           formFields=$invoiceFields
@@ -119,7 +122,8 @@ prefix='invoice_'
           selected_address=$cart.id_address_invoice
         }
       </div>
-      <div id="opc-billing-address-content-fields" class="d-none">
+      {/if}
+      <div id="opc-billing-address-content-fields" class="{if $customer.addresses|count > 1}d-none{/if}">
         {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
           formFields=$deliveryFields
           prefix=''
