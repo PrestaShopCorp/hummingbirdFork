@@ -28,6 +28,7 @@
         </label>
         <p class="mb-2 text-muted small" id="opc-address-details-{$address.id}">
           <span class="visually-hidden">{l s='Address details:' d='Shop.Theme.Actions'}</span>
+          {$customer.firstname} {$customer.lastname}<br>
           {$address.address1}{if $address.address2} {$address.address2}{/if}<br>
           {$address.postcode} {$address.city}
         </p>
