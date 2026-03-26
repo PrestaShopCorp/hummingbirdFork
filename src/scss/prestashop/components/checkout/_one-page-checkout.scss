@@ -35,18 +35,4 @@ $component-name: one-page-checkout;
       margin-bottom: 1rem;
     }
   }
-
-  .opc-address-item + .opc-address-item {
-    border-top: none !important;
-  }
-
-  .opc-address-item.selected {
-    border: 1px solid var(--bs-primary) !important;
-    position: relative;
-    z-index: 2;
-  }
-
-  .opc-address-item + .opc-address-item.selected {
-    margin-top: -1px !important;
-  }
 }

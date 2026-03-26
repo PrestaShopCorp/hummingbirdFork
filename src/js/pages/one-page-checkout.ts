@@ -40,13 +40,13 @@ const initAddressSelection = (): void => {
     }
 
     allItems.forEach((item) => {
-      item.classList.remove('border-primary', 'selected');
+      item.classList.remove('border-primary', 'selected', 'z-1');
       item.querySelector(onePageCheckout.addressLabel)?.classList.remove('fw-semibold');
     });
 
     const selectedItem = target.closest(onePageCheckout.addressItem);
     if (selectedItem) {
-      selectedItem.classList.add('border-primary', 'selected');
+      selectedItem.classList.add('border-primary', 'selected', 'z-1');
       selectedItem.querySelector(onePageCheckout.addressLabel)?.classList.add('fw-semibold');
     }
 

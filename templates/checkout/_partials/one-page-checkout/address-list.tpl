@@ -6,7 +6,8 @@
   {foreach from=$customer.addresses item="address"}
     {assign var="is_address_selected" value=$address.id|intval === $selected_address}
     <div
-      class="opc-address-item d-flex p-2 border{if $address@first} rounded-top{/if}{if $is_address_selected} border-primary selected{/if}"
+      class="opc-address-item d-flex p-2 border{if $address@first} rounded-top{/if}{if $is_address_selected} border-primary z-1 selected{/if}"
+      {if !$address@first}style="margin-top: -1px;"{/if}
       data-id-address="{$address.id}"
     >
       <div class="form-check mb-2">
@@ -90,6 +91,7 @@
   {if $customer.addresses|count > 0}
   <div
     class="opc-address-item d-flex p-2 border rounded-bottom"
+    style="margin-top: -1px;"
   >
     <div class="form-check mb-2">
       <input
