@@ -3,8 +3,6 @@
  * file that was distributed with this source code.
  */
 
-import {onePageCheckout} from '@constants/selectors-map';
-
 /**
  * One Page Checkout — theme entry point
  *
@@ -18,6 +16,8 @@ import {onePageCheckout} from '@constants/selectors-map';
  * Add theme-specific behaviour here only — the core handles everything else.
  */
 
+import {onePageCheckout} from '@constants/selectors-map';
+
 const initAddressSelection = (): void => {
   const {prestashop} = window;
   let abortController: AbortController | null = null;
@@ -30,17 +30,38 @@ const initAddressSelection = (): void => {
     }
 
     const selectedAddressId = target.value;
+    const selectedAddressType = target.name;
 
-    const allItems = document.querySelectorAll(onePageCheckout.addressItem);
+    let allItems;
+    if(selectedAddressType === 'id_address_delivery') {
+      allItems = document.querySelectorAll(onePageCheckout.deliverySection + " " + onePageCheckout.addressItem);
+    } else {
+      allItems = document.querySelectorAll(onePageCheckout.billingSection + " " + onePageCheckout.addressItem);
+    }
 
     allItems.forEach((item) => {
       item.classList.remove('border-primary', 'selected');
+      item.querySelector(onePageCheckout.addressLabel)?.classList.remove('fw-semibold');
     });
 
     const selectedItem = target.closest(onePageCheckout.addressItem);
-
     if (selectedItem) {
       selectedItem.classList.add('border-primary', 'selected');
+      selectedItem.querySelector(onePageCheckout.addressLabel)?.classList.add('fw-semibold');
+    }
+
+    if (selectedAddressId === 'new_address') {
+      if (selectedAddressType === 'id_address_delivery') {
+        document.querySelector("#opc-delivery-address-content-fields")?.classList.remove('d-none');
+      } else {
+        document.querySelector("#opc-billing-address-content-fields")?.classList.remove('d-none');
+      }
+    } else {
+      if (selectedAddressType === 'id_address_delivery') {
+        document.querySelector("#opc-delivery-address-content-fields")?.classList.add('d-none');
+      } else {
+        document.querySelector("#opc-billing-address-content-fields")?.classList.add('d-none');
+      }
     }
 
     const deliveryMethodsContainer = document.querySelector<HTMLElement>(onePageCheckout.deliveryMethods);
@@ -58,7 +79,7 @@ const initAddressSelection = (): void => {
     const url = new URL(window.location.href);
     url.searchParams.set('ajax', '1');
     url.searchParams.set('action', 'opcCarriers');
-    url.searchParams.set('id_address_delivery', selectedAddressId);
+    url.searchParams.set(selectedAddressType, selectedAddressId);
 
     const useSameAddress = document.querySelector<HTMLInputElement>(onePageCheckout.useSameAddress);
 

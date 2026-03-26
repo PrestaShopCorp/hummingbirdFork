@@ -75,12 +75,20 @@ prefix='invoice_'
   <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
 
   <section id="opc-delivery-address" class="form-fields">
-    <div id="opc-delivery-address-fields">
-      {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
-        formFields=$deliveryFields
-        prefix=''
-        selected_address=$cart.id_address_delivery
-      }
+    <div id="opc-delivery-address-content">
+      <div id="opc-delivery-address-content-list">
+        {include file='checkout/_partials/one-page-checkout/address-list.tpl'
+          formFields=$deliveryFields
+          prefix=''
+          selected_address=$cart.id_address_delivery
+        }
+      </div>
+      <div id="opc-delivery-address-content-fields" class="d-none">
+        {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
+          formFields=$deliveryFields
+          prefix=''
+        }
+      </div>
     </div>
     <template id="opc-delivery-address-loader">
       {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'
@@ -103,12 +111,20 @@ prefix='invoice_'
   <h2 class="one-page-checkout__title">{l s='Billing address' d='Shop.Theme.Checkout'}</h2>
 
   <section class="form-fields">
-    <div id="opc-billing-address-fields">
-    {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
-      formFields=$invoiceFields
-      prefix='invoice_'
-      selected_address=$cart.id_address_invoice
-    }
+    <div id="opc-billing-address-content">
+      <div id="opc-billing-address-content-list">
+        {include file='checkout/_partials/one-page-checkout/address-list.tpl'
+          formFields=$invoiceFields
+          prefix='invoice_'
+          selected_address=$cart.id_address_invoice
+        }
+      </div>
+      <div id="opc-billing-address-content-fields" class="d-none">
+        {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
+          formFields=$deliveryFields
+          prefix=''
+        }
+      </div>
     </div>
     <template id="opc-billing-address-loader">
       {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'

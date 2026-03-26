@@ -130,11 +130,13 @@ export const visiblePassword = {
 export const onePageCheckout = {
   form: '#opc-form',
   useSameAddress: '#opc-use-same-address',
+  deliverySection: '#opc-delivery-address',
   billingSection: '#opc-billing-section',
   payButton: '#opc-pay-button',
   deliveryMethods: '#opc-delivery-methods',
   addressRadio: '.js-opc-address-radio',
   addressItem: '.opc-address-item',
+  addressLabel: '.form-check-label',
 };
 
 export const gdpr = {
