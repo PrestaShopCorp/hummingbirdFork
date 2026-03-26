@@ -85,7 +85,7 @@ prefix='invoice_'
         }
       </div>
       {/if}
-      <div id="opc-delivery-address-content-fields" class="{if $customer.addresses|count > 1}d-none{/if}">
+      <div id="opc-delivery-address-content-fields" class="{if $customer.addresses|count > 0}d-none{/if}">
         {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
           formFields=$deliveryFields
           prefix=''
