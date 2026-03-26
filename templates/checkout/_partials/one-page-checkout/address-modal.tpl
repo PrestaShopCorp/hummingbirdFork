@@ -35,7 +35,24 @@
 
           {if isset($formFields[$_key_alias])}{form_field field=$formFields[$_key_alias]}{/if}
 
-          {if isset($formFields[$_key_id_country])}{form_field field=$formFields[$_key_id_country]}{/if}
+          {if isset($formFields[$_key_id_country])}
+            <div class="form-group mb-3">
+              <label class="form-label required" for="{$modal_id}-field-id_country">
+                {$formFields[$_key_id_country].label}
+              </label>
+              <select
+                class="form-select"
+                name="{$formFields[$_key_id_country].name}"
+                id="{$modal_id}-field-id_country"
+                {if $formFields[$_key_id_country].required}required{/if}
+              >
+                <option value="">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
+                {foreach from=$formFields[$_key_id_country].availableValues item="label" key="value"}
+                  <option value="{$value}" {if (string) $value === (string) $formFields[$_key_id_country].value}selected{/if}>{$label}</option>
+                {/foreach}
+              </select>
+            </div>
+          {/if}
 
           {if isset($formFields[$_key_firstname]) && isset($formFields[$_key_lastname])}
             {include file='_partials/form-fields-row.tpl' fields=[$formFields[$_key_firstname], $formFields[$_key_lastname]]}

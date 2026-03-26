@@ -1,7 +1,5 @@
 {**
  * One Page Checkout - Layout
- * Thin wrapper: <form> + {render} + submit button.
- * All sections are rendered inside one-page-checkout-form.tpl via {render ui=$opc_form}.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,8 +8,14 @@
 <form id="opc-form" class="one-page-checkout" method="POST" action="{$urls.pages.order}" data-ps-action="form-validation">
   <input type="hidden" name="submitOnePageCheckout" value="1">
 
-  <div class="js-opc-address-form">
-    {render ui=$opc_form}
+  {include file='_partials/form-errors.tpl' errors=$errors['']}
+
+  <div class="js-opc-contact-section">
+    {include file='checkout/_partials/one-page-checkout/contact-section.tpl'}
+  </div>
+
+  <div class="js-opc-addresses-section">
+    {include file='checkout/_partials/one-page-checkout/addresses-section.tpl'}
   </div>
 
   {* ===== Delivery method ===== *}
@@ -33,6 +37,7 @@
     payment_options=$payment_options|default:[]
     is_free=$is_free|default:false
     selected_payment_module=$selected_payment_module|default:''
+    selected_payment_selection_key=$selected_payment_selection_key|default:''
   }
 
   <div class="one-page-checkout__footer">

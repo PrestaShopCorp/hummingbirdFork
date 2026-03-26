@@ -6,7 +6,8 @@
  * Variables:
  *   $payment_options          - available payment options (may be empty on first load)
  *   $is_free                  - boolean, true when cart total is 0
- *   $selected_payment_module  - module_name of the currently selected payment option (stable across renders)
+ *   $selected_payment_module  - legacy fallback module_name of the currently selected payment option
+ *   $selected_payment_selection_key - stable OPC selection key for the currently selected payment option
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,6 +26,7 @@
         payment_options=$payment_options
         is_free=$is_free
         selected_payment_module=$selected_payment_module
+        selected_payment_selection_key=$selected_payment_selection_key|default:''
       }
     {else}
       <div class="card card-body bg-light">
