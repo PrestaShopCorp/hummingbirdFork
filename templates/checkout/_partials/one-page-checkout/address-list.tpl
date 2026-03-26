@@ -8,6 +8,7 @@
     <div
       class="opc-address-item d-flex p-2 border{if $address@first} rounded-top{/if}{if $is_address_selected} border-primary z-1 selected{/if}"
       {if !$address@first}style="margin-top: -1px;"{/if}
+      role="button"
       data-id-address="{$address.id}"
     >
       <div class="form-check mb-2">
@@ -92,6 +93,7 @@
   <div
     class="opc-address-item d-flex p-2 border rounded-bottom"
     style="margin-top: -1px;"
+    role="button"
   >
     <div class="form-check mb-2">
       <input

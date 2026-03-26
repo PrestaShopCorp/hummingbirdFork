@@ -22,18 +22,33 @@ const initAddressSelection = (): void => {
   const {prestashop} = window;
   let abortController: AbortController | null = null;
 
-  document.addEventListener('change', async (event) => {
-    const target = event.target as HTMLInputElement;
+  document.addEventListener('click', async (event) => {
+    const target = event.target as HTMLElement;
 
-    if (!target.matches(onePageCheckout.addressRadio)) {
+    const addressItem = target.closest(onePageCheckout.addressItem);
+    if (!addressItem) {
       return;
     }
 
-    const selectedAddressId = target.value;
-    const selectedAddressType = target.name;
+    if (target.closest('.opc-address-card__actions')) {
+      return;
+    }
+
+    if (addressItem.classList.contains('selected')) {
+      return;
+    }
+
+    const radio = addressItem.querySelector<HTMLInputElement>(onePageCheckout.addressRadio);
+    if (!radio) {
+      return;
+    }
+    radio.checked = true;
+
+    const selectedAddressId = radio.value;
+    const selectedAddressType = radio.name;
 
     let allItems;
-    if(selectedAddressType === 'id_address_delivery') {
+    if (selectedAddressType === 'id_address_delivery') {
       allItems = document.querySelectorAll(onePageCheckout.deliverySection + " " + onePageCheckout.addressItem);
     } else {
       allItems = document.querySelectorAll(onePageCheckout.billingSection + " " + onePageCheckout.addressItem);
