@@ -107,6 +107,7 @@ prefix='invoice_'
     {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
       formFields=$invoiceFields
       prefix='invoice_'
+      selected_address=$cart.id_address_invoice
     }
     </div>
     <template id="opc-billing-address-loader">
