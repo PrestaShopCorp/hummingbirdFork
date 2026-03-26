@@ -26,6 +26,7 @@ const initAddressSelection = (): void => {
     const target = event.target as HTMLElement;
 
     const addressItem = target.closest(onePageCheckout.addressItem);
+
     if (!addressItem) {
       return;
     }
@@ -39,6 +40,7 @@ const initAddressSelection = (): void => {
     }
 
     const radio = addressItem.querySelector<HTMLInputElement>(onePageCheckout.addressRadio);
+
     if (!radio) {
       return;
     }
@@ -48,10 +50,11 @@ const initAddressSelection = (): void => {
     const selectedAddressType = radio.name;
 
     let allItems;
+
     if (selectedAddressType === 'id_address_delivery') {
-      allItems = document.querySelectorAll(onePageCheckout.deliverySection + " " + onePageCheckout.addressItem);
+      allItems = document.querySelectorAll(`${onePageCheckout.deliverySection} ${onePageCheckout.addressItem}`);
     } else {
-      allItems = document.querySelectorAll(onePageCheckout.billingSection + " " + onePageCheckout.addressItem);
+      allItems = document.querySelectorAll(`${onePageCheckout.billingSection} ${onePageCheckout.addressItem}`);
     }
 
     allItems.forEach((item) => {
@@ -60,6 +63,7 @@ const initAddressSelection = (): void => {
     });
 
     const selectedItem = target.closest(onePageCheckout.addressItem);
+
     if (selectedItem) {
       selectedItem.classList.add('border-primary', 'selected', 'z-1');
       selectedItem.querySelector(onePageCheckout.addressLabel)?.classList.add('fw-semibold');
@@ -67,16 +71,14 @@ const initAddressSelection = (): void => {
 
     if (selectedAddressId === 'new_address') {
       if (selectedAddressType === 'id_address_delivery') {
-        document.querySelector("#opc-delivery-address-content-fields")?.classList.remove('d-none');
+        document.querySelector('#opc-delivery-address-content-fields')?.classList.remove('d-none');
       } else {
-        document.querySelector("#opc-billing-address-content-fields")?.classList.remove('d-none');
+        document.querySelector('#opc-billing-address-content-fields')?.classList.remove('d-none');
       }
+    } else if (selectedAddressType === 'id_address_delivery') {
+      document.querySelector('#opc-delivery-address-content-fields')?.classList.add('d-none');
     } else {
-      if (selectedAddressType === 'id_address_delivery') {
-        document.querySelector("#opc-delivery-address-content-fields")?.classList.add('d-none');
-      } else {
-        document.querySelector("#opc-billing-address-content-fields")?.classList.add('d-none');
-      }
+      document.querySelector('#opc-billing-address-content-fields')?.classList.add('d-none');
     }
 
     const deliveryMethodsContainer = document.querySelector<HTMLElement>(onePageCheckout.deliveryMethods);
