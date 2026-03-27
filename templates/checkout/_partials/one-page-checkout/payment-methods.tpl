@@ -49,12 +49,12 @@
         {if $option.form}
           {$option.form nofilter}
         {else}
-          <form id="payment-form" method="POST" action="{$option.action nofilter}">
+          <div class="js-opc-payment-fallback" data-action="{$option.action nofilter}">
             {foreach from=$option.inputs item=input}
               <input type="{$input.type}" name="{$input.name}" value="{$input.value}">
             {/foreach}
-            <button style="display:none" id="pay-with-{$option.id}" type="submit"></button>
-          </form>
+            <button style="display:none" id="pay-with-{$option.id}" type="button"></button>
+          </div>
         {/if}
       </div>
 

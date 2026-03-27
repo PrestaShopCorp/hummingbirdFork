@@ -27,41 +27,40 @@
     gift=$gift|default:[]
   }
 
-
-  {* ===== Payment method ===== *}
-  {include file='checkout/_partials/one-page-checkout/payment-section.tpl'
-    payment_options=$payment_options|default:[]
-    is_free=$is_free|default:false
-    selected_payment_module=$selected_payment_module|default:''
-  }
-
-  <div class="one-page-checkout__footer">
-    {* ===== Terms & conditions ===== *}
-    {if $conditions_to_approve|count}
-      {foreach from=$conditions_to_approve item="condition" key="condition_name"}
-        <div class="form-check">
-          <input id="conditions_to_approve[{$condition_name}]"
-                 name="conditions_to_approve[{$condition_name}]"
-                 required
-                 type="checkbox"
-                 value="1"
-                 class="form-check-input"
-          >
-          <label class="js-terms form-check-label" for="conditions_to_approve[{$condition_name}]">
-            {$condition nofilter}
-          </label>
-        </div>
-      {/foreach}
-    {/if}
-
-    {hook h='displayCheckoutBeforeConfirmation'}
-
-    {* ===== Pay button ===== *}
-    <button class="one-page-checkout__submit btn btn-primary btn-lg w-100" type="submit" id="opc-pay-button" disabled>
-      {l s='Pay' d='Shop.Theme.Checkout'} <span id="opc-pay-amount">{$cart.totals.total.value}</span>
-    </button>
-
-    {hook h='displayPaymentByBinaries'}
-  </div>
-
 </form>
+
+{* Payment section is rendered OUTSIDE the main form to avoid nested <form> markup from payment modules (invalid HTML). *}
+{include file='checkout/_partials/one-page-checkout/payment-section.tpl'
+  payment_options=$payment_options|default:[]
+  is_free=$is_free|default:false
+  selected_payment_module=$selected_payment_module|default:''
+}
+
+<div class="one-page-checkout__footer">
+  {* ===== Terms & conditions ===== *}
+  {if $conditions_to_approve|count}
+    {foreach from=$conditions_to_approve item="condition" key="condition_name"}
+      <div class="form-check">
+        <input id="conditions_to_approve[{$condition_name}]"
+               name="conditions_to_approve[{$condition_name}]"
+               required
+               type="checkbox"
+               value="1"
+               class="form-check-input"
+        >
+        <label class="js-terms form-check-label" for="conditions_to_approve[{$condition_name}]">
+          {$condition nofilter}
+        </label>
+      </div>
+    {/foreach}
+  {/if}
+
+  {hook h='displayCheckoutBeforeConfirmation'}
+
+  {* ===== Pay button ===== *}
+  <button class="one-page-checkout__submit btn btn-primary btn-lg w-100" type="button" id="opc-pay-button" disabled>
+    {l s='Pay' d='Shop.Theme.Checkout'} <span id="opc-pay-amount">{$cart.totals.total.value}</span>
+  </button>
+
+  {hook h='displayPaymentByBinaries'}
+</div>
