@@ -12,7 +12,6 @@
  *   - Billing section toggle
  *   - Carrier list fetch, loader and error states
  *   - Cart summary and pay button amount update
- *   - Address selection events
  *
  * Add theme-specific behaviour here only — the core handles everything else.
  */
