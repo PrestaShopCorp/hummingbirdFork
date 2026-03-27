@@ -133,8 +133,6 @@ export const onePageCheckout = {
   billingSection: '#opc-billing-section',
   payButton: '#opc-pay-button',
   deliveryMethods: '#opc-delivery-methods',
-  addressRadio: '.js-opc-address-radio',
-  addressItem: '.opc-address-item',
 };
 
 export const gdpr = {
