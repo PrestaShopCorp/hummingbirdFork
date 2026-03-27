@@ -16,8 +16,6 @@
  * Add theme-specific behaviour here only — the core handles everything else.
  */
 
-import {onePageCheckout} from '@constants/selectors-map';
-
 const initOnePageCheckout = (): void => {
   const {prestashop} = window;
 
