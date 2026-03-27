@@ -102,7 +102,7 @@
 
 
 {foreach from=$customer.addresses item="address"}
-  <div class="opc-address-item mb-3 p-3 border rounded{if !$prefix && $address.id|intval == $selected_address} border-primary selected{/if}" data-id-address="{$address.id}">
+  <div class="opc-address-item mb-3 p-3 border rounded" data-id-address="{$address.id}">
     {if !$prefix}
       <div class="form-check mb-2">
         <input

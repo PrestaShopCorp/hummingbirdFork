@@ -17,21 +17,8 @@
  * Add theme-specific behaviour here only — the core handles everything else.
  */
 
-const ADDRESS_ITEM_SELECTOR = '.opc-address-item';
-
 const initOnePageCheckout = (): void => {
   const {prestashop} = window;
-
-  prestashop.on('opcDeliveryAddressSelected', ({target}: {target: Element | null}) => {
-    document.querySelectorAll(ADDRESS_ITEM_SELECTOR).forEach((item) => {
-      item.classList.remove('border-primary', 'selected');
-    });
-
-    // Add selection to the target item
-    if (target) {
-      target.classList.add('border-primary', 'selected');
-    }
-  });
 
   // Preserve Bootstrap accordion open state across cart summary DOM replacements.
   let openCollapseIds: string[] = [];
