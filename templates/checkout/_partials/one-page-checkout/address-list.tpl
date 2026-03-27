@@ -94,6 +94,9 @@
     class="opc-address-item d-flex p-2 border rounded-bottom"
     style="margin-top: -1px;"
     role="button"
+    data-bs-toggle="modal"
+    data-type="create"
+    data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
   >
     <div class="form-check mb-2">
       <input
@@ -102,8 +105,6 @@
         name="id_address_{if $prefix}invoice{else}delivery{/if}"
         id="opc-new-address"
         value="new_address"
-        aria-label="{l s='Select address: %alias%' sprintf=['%alias%' => $address.alias] d='Shop.Theme.Actions'}"
-        aria-describedby="opc-address-details-{$address.id}"
       >
     </div>
     <div class="flex-grow-1">
