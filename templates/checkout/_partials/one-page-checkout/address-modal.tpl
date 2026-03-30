@@ -33,9 +33,9 @@
           {assign var="_key_id_state" value="{$prefix}id_state"}
           {assign var="_key_phone" value="{$prefix}phone"}
 
-          {if isset($formFields[$_key_alias])}{form_field field=$formFields[$_key_alias]}{/if}
-
           {if isset($formFields[$_key_id_country])}{form_field field=$formFields[$_key_id_country]}{/if}
+
+          {if isset($formFields[$_key_alias])}{form_field field=$formFields[$_key_alias]}{/if}
 
           {if isset($formFields[$_key_firstname]) && isset($formFields[$_key_lastname])}
             {include file='_partials/form-fields-row.tpl' fields=[$formFields[$_key_firstname], $formFields[$_key_lastname]]}
