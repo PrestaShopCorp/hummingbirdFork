@@ -77,7 +77,7 @@
                 type="button"
                 class="dropdown-item link-danger js-delete-address"
                 data-id-address="{$address.id}"
-                data-address-type="{if $prefix}invoice{else}delivery{/if}"
+                data-address-type="{if $prefix == 'invoice_'}invoice{else}delivery{/if}"
                 data-confirm-message="{l s='Are you sure you want to delete this address?' d='Shop.Theme.Checkout'}"
               >
                 {l s='Delete' d='Shop.Theme.Actions'}
@@ -102,13 +102,13 @@
       <input
         type="radio"
         class="form-check-input js-opc-address-radio"
-        name="id_address_{if $prefix}invoice{else}delivery{/if}"
-        id="opc-new-address"
+        name="id_address_{if $prefix == 'invoice_'}invoice{else}delivery{/if}"
+        id="opc-new-{if $prefix == 'invoice_'}invoice{else}delivery{/if}-address"
         value="new_address"
       >
     </div>
     <div class="flex-grow-1">
-      <label class="form-check-label" for="opc-new-address">
+      <label class="form-check-label" for="opc-new-{if $prefix == 'invoice_'}invoice{else}delivery{/if}-address">
         {l s='Use a different delivery address' d='Shop.Theme.Checkout'}
       </label>
     </div>
