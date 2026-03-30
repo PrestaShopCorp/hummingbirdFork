@@ -102,16 +102,36 @@
 
 
 {foreach from=$customer.addresses item="address"}
-  <div class="mb-3">
-    <p>
-      <strong>{$address.alias}</strong><br>
-      {$address.address1} {$address.address2}<br>
+  <div class="opc-address-item mb-3 p-3 border rounded" data-id-address="{$address.id}">
+    {if !$prefix}
+      <div class="form-check mb-2">
+        <input
+          type="radio"
+          class="form-check-input js-opc-address-radio"
+          name="id_address_delivery"
+          id="opc-address-{$address.id}"
+          value="{$address.id}"
+          {if $address.id|intval == $selected_address}checked{/if}
+          aria-label="{l s='Select address: %alias%' sprintf=['%alias%' => $address.alias] d='Shop.Theme.Actions'}"
+          aria-describedby="opc-address-details-{$address.id}"
+        >
+        <label class="form-check-label fw-bold" for="opc-address-{$address.id}">
+          {$address.alias}
+        </label>
+      </div>
+    {else}
+      <p class="fw-bold mb-2">{$address.alias}</p>
+    {/if}
+
+    <p class="mb-2 text-muted small" id="opc-address-details-{$address.id}">
+      <span class="visually-hidden">{l s='Address details:' d='Shop.Theme.Actions'}</span>
+      {$address.address1}{if $address.address2} {$address.address2}{/if}<br>
       {$address.postcode} {$address.city}
     </p>
 
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-sm btn-outline-secondary"
       data-bs-toggle="modal"
       data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
       data-type="edit"
@@ -142,7 +162,6 @@
       <i class="material-icons">delete</i> {l s='Delete' d='Shop.Theme.Actions'}
     </button>
   </div>
-  <hr>
 {/foreach}
 {if $customer.addresses|count > 0}
   <button
