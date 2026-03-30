@@ -59,9 +59,13 @@
     {assign var="_base" value=$field.name}
   {/if}
 
-  {* ----- alias: always present but never displayed — emit as hidden input ----- *}
+  {* ----- alias: hide for guests, show for logged-in users ----- *}
   {if $_base === 'alias'}
-    <input type="hidden" name="{$field.name}" value="My address">
+    {if $customer.is_logged}
+      {form_field field=$field}
+    {else}
+      <input type="hidden" name="{$field.name}" value="{l s='My address' d='Shop.Theme.Checkout'}">
+    {/if}
 
   {* ----- Name row: firstname + lastname rendered together in 2 columns ----- *}
   {* When firstname is encountered first, the whole row (both fields) is output.  *}
