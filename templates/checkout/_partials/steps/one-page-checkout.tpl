@@ -29,17 +29,11 @@
 
 
   {* ===== Payment method ===== *}
-  <section class="one-page-checkout__section">
-    <h2 class="one-page-checkout__title">{l s='Payment method' d='Shop.Theme.Checkout'}</h2>
-
-    {hook h='displayPaymentTop'}
-
-    <div class="one-page-checkout__placeholder" id="opc-payment-methods">
-      <div class="card card-body bg-light">
-        {l s='You will see the available payment methods once you\'ve entered your delivery address.' d='Shop.Theme.Checkout'}
-      </div>
-    </div>
-  </section>
+  {include file='checkout/_partials/one-page-checkout/payment-section.tpl'
+    payment_options=$payment_options|default:[]
+    is_free=$is_free|default:false
+    selected_payment_module=$selected_payment_module|default:''
+  }
 
   <div class="one-page-checkout__footer">
     {* ===== Terms & conditions ===== *}
