@@ -17,7 +17,7 @@
     {/if}
   </p>
   {if isset($retry_label) && $retry_label}
-    <button type="button" class="btn btn-sm btn-outline-danger flex-shrink-0" data-opc-action="retry-carriers">
+    <button type="button" class="btn btn-sm btn-outline-danger flex-shrink-0" data-opc-action="{if isset($retry_action) && $retry_action}{$retry_action|escape:'html'}{else}retry-carriers{/if}">
       {$retry_label|escape:'html'}
     </button>
   {/if}
