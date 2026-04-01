@@ -59,9 +59,13 @@
     {assign var="_base" value=$field.name}
   {/if}
 
-  {* ----- alias: always present but never displayed — emit as hidden input ----- *}
+  {* ----- alias: hide for guests, show for logged-in users ----- *}
   {if $_base === 'alias'}
-    <input type="hidden" name="{$field.name}" value="My address">
+    {if $customer.is_logged}
+      {form_field field=$field}
+    {else}
+      <input type="hidden" name="{$field.name}" value="{l s='My address' d='Shop.Theme.Checkout'}">
+    {/if}
 
   {* ----- Name row: firstname + lastname rendered together in 2 columns ----- *}
   {* When firstname is encountered first, the whole row (both fields) is output.  *}
@@ -99,78 +103,3 @@
 
   {/if}
 {/foreach}
-
-
-{foreach from=$customer.addresses item="address"}
-  <div class="opc-address-item mb-3 p-3 border rounded" data-id-address="{$address.id}">
-    {if !$prefix}
-      <div class="form-check mb-2">
-        <input
-          type="radio"
-          class="form-check-input js-opc-address-radio"
-          name="id_address_delivery"
-          id="opc-address-{$address.id}"
-          value="{$address.id}"
-          {if $address.id|intval == $selected_address}checked{/if}
-          aria-label="{l s='Select address: %alias%' sprintf=['%alias%' => $address.alias] d='Shop.Theme.Actions'}"
-          aria-describedby="opc-address-details-{$address.id}"
-        >
-        <label class="form-check-label fw-bold" for="opc-address-{$address.id}">
-          {$address.alias}
-        </label>
-      </div>
-    {else}
-      <p class="fw-bold mb-2">{$address.alias}</p>
-    {/if}
-
-    <p class="mb-2 text-muted small" id="opc-address-details-{$address.id}">
-      <span class="visually-hidden">{l s='Address details:' d='Shop.Theme.Actions'}</span>
-      {$address.address1}{if $address.address2} {$address.address2}{/if}<br>
-      {$address.postcode} {$address.city}
-    </p>
-
-    <button
-      type="button"
-      class="btn btn-sm btn-outline-secondary"
-      data-bs-toggle="modal"
-      data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
-      data-type="edit"
-      data-id_address="{$address.id}"
-      data-alias="{$address.alias|escape:'html':'UTF-8'}"
-      data-firstname="{$address.firstname|escape:'html':'UTF-8'}"
-      data-lastname="{$address.lastname|escape:'html':'UTF-8'}"
-      data-company="{$address.company|escape:'html':'UTF-8'}"
-      data-vat_number="{$address.vat_number|escape:'html':'UTF-8'}"
-      data-address1="{$address.address1|escape:'html':'UTF-8'}"
-      data-address2="{$address.address2|escape:'html':'UTF-8'}"
-      data-city="{$address.city|escape:'html':'UTF-8'}"
-      data-postcode="{$address.postcode|escape:'html':'UTF-8'}"
-      data-id_state="{$address.id_state}"
-      data-id_country="{$address.id_country}"
-      data-phone="{$address.phone|escape:'html':'UTF-8'}"
-    >
-      {l s='Edit address' d='Shop.Theme.Actions'}
-    </button>
-    <button
-      type="button"
-      class="btn btn-outline-danger js-delete-address"
-      data-id-address="{$address.id}"
-      data-address-type="{if $prefix == 'invoice_'}invoice{else}delivery{/if}"
-      data-confirm-message="{l s='Are you sure you want to delete this address?' d='Shop.Theme.Checkout'}"
-      title="{l s='Delete' d='Shop.Theme.Actions'}"
-    >
-      <i class="material-icons">delete</i> {l s='Delete' d='Shop.Theme.Actions'}
-    </button>
-  </div>
-{/foreach}
-{if $customer.addresses|count > 0}
-  <button
-    type="button"
-    class="btn btn-primary"
-    data-bs-toggle="modal"
-    data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
-    data-type="create"
-  >
-    {l s='Add new address' d='Shop.Theme.Actions'}
-  </button>
-{/if}
