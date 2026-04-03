@@ -11,10 +11,11 @@
   <input type="hidden" name="submitOnePageCheckout" value="1">
 
   <div class="js-opc-address-form">
-    {render ui=$opc_form}
+    {render ui=$opc_form is_virtual_cart=$is_virtual_cart}
   </div>
 
   {* ===== Delivery method ===== *}
+  {if !$is_virtual_cart}
   {include file='checkout/_partials/one-page-checkout/delivery-section.tpl'
     delivery_options=$delivery_options
     delivery_option=$delivery_option
@@ -26,7 +27,7 @@
     recyclable=$recyclable|default:false
     gift=$gift|default:[]
   }
-
+  {/if}
 
   {* ===== Payment method ===== *}
   {include file='checkout/_partials/one-page-checkout/payment-section.tpl'

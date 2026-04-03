@@ -109,7 +109,11 @@
     </div>
     <div class="flex-grow-1">
       <label class="form-check-label" for="opc-new-{if $prefix == 'invoice_'}invoice{else}delivery{/if}-address">
-        {l s='Use a different delivery address' d='Shop.Theme.Checkout'}
+        {if $prefix == 'invoice_'}
+          {l s='Use a different billing address' d='Shop.Theme.Checkout'}
+        {else}
+          {l s='Use a different delivery address' d='Shop.Theme.Checkout'}
+        {/if}
       </label>
     </div>
   </div>

@@ -10,15 +10,17 @@
 {hook h='displayPersonalInformationTop' customer=$customer}
 
 {include file='_partials/form-errors.tpl' errors=$errors['']}
-{* Delivery Address Modal *}
-{include file='checkout/_partials/one-page-checkout/address-modal.tpl'
-modal_id='modal-delivery'
-formFields=$deliveryFields
-title_new={l s='New delivery address' d='Shop.Theme.Checkout'}
-title_edit={l s='Edit delivery address' d='Shop.Theme.Checkout'}
-address_type='delivery'
-prefix=''
-}
+{if !$is_virtual_cart}
+  {* Delivery Address Modal — only for carts with physical products *}
+  {include file='checkout/_partials/one-page-checkout/address-modal.tpl'
+  modal_id='modal-delivery'
+  formFields=$deliveryFields
+  title_new={l s='New delivery address' d='Shop.Theme.Checkout'}
+  title_edit={l s='Edit delivery address' d='Shop.Theme.Checkout'}
+  address_type='delivery'
+  prefix=''
+  }
+{/if}
 
 {* Billing Address Modal *}
 {include file='checkout/_partials/one-page-checkout/address-modal.tpl'
@@ -70,7 +72,8 @@ prefix='invoice_'
     {include file='checkout/_partials/connected-account-info.tpl'}
   </section>
 {/if}
-{* ===== Delivery address fields ===== *}
+{if !$is_virtual_cart}
+{* ===== Delivery address fields (physical products only) ===== *}
 <section class="one-page-checkout__section">
   <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
 
@@ -107,14 +110,22 @@ prefix='invoice_'
     </div>
   </section>
 </section>
+{/if}
 
-{* ===== Billing address fields (hidden by default, JS manages visibility) ===== *}
-<section class="one-page-checkout__section" id="opc-billing-section" style="display: none;">
+{* ===== Billing address fields ===== *}
+{* Always visible for virtual carts. Hidden by default for physical carts (JS manages visibility via #opc-use-same-address). *}
+<section class="one-page-checkout__section" {if !$is_virtual_cart}id="opc-billing-section" style="display: none;"{/if}>
   <h2 class="one-page-checkout__title">{l s='Billing address' d='Shop.Theme.Checkout'}</h2>
 
   <section class="form-fields">
     <div id="opc-billing-address-content">
-      {if $customer.addresses|count > 1}
+      {* Virtual cart: show list from 1 address. Physical cart: show list from 2 (billing is a separate address). *}
+      {if $is_virtual_cart}
+        {assign var="billing_list_threshold" value=0}
+      {else}
+        {assign var="billing_list_threshold" value=1}
+      {/if}
+      {if $customer.addresses|count > $billing_list_threshold}
       <div id="opc-billing-address-content-list">
         {include file='checkout/_partials/one-page-checkout/address-list.tpl'
           formFields=$invoiceFields
@@ -123,7 +134,7 @@ prefix='invoice_'
         }
       </div>
       {/if}
-      <div id="opc-billing-address-content-fields" class="{if $customer.addresses|count > 1}d-none{/if}">
+      <div id="opc-billing-address-content-fields" class="{if $customer.addresses|count > $billing_list_threshold}d-none{/if}">
         {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
           formFields=$invoiceFields
           prefix='invoice_'
