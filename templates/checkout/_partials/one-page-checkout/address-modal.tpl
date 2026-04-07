@@ -33,11 +33,9 @@
           {assign var="_key_id_state" value="{$prefix}id_state"}
           {assign var="_key_phone" value="{$prefix}phone"}
 
-          {if isset($formFields[$_key_alias])}{form_field field=$formFields[$_key_alias]}{/if}
-
           {if isset($formFields[$_key_id_country])}
             <div class="form-group mb-3">
-              <label class="form-label required" for="{$modal_id}-field-id_country">
+              <label class="form-label{if $formFields[$_key_id_country].required} required{/if}" for="{$modal_id}-field-id_country">
                 {$formFields[$_key_id_country].label}
               </label>
               <select
@@ -54,6 +52,8 @@
             </div>
           {/if}
 
+          {if isset($formFields[$_key_alias])}{form_field field=$formFields[$_key_alias]}{/if}
+
           {if isset($formFields[$_key_firstname]) && isset($formFields[$_key_lastname])}
             {include file='_partials/form-fields-row.tpl' fields=[$formFields[$_key_firstname], $formFields[$_key_lastname]]}
           {/if}
@@ -69,13 +69,13 @@
           <div class="form-fields-row form-fields-row--2 address-country-row">
             {if isset($formFields[$_key_city])}{form_field field=$formFields[$_key_city]}{/if}
             <div class="form-group mb-3 state-field-wrapper" style="{if !isset($formFields[$_key_id_state]) || empty($formFields[$_key_id_state].availableValues)}display: none;{/if}">
-              <label class="form-label required" for="field-id_state">
+              <label class="form-label{if isset($formFields[$_key_id_state]) && $formFields[$_key_id_state].required} required{/if}" for="{$modal_id}-field-id_state">
                 {l s='State' d='Shop.Forms.Labels'}
               </label>
               <select
                 class="form-select"
-                name="id_state"
-                id="field-id_state"
+                name="{if isset($formFields[$_key_id_state])}{$formFields[$_key_id_state].name}{else}{$prefix}id_state{/if}"
+                id="{$modal_id}-field-id_state"
                 data-select-placeholder="{l s='-- please choose --' d='Shop.Forms.Labels' js=1}"
               >
                 <option value="">{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
