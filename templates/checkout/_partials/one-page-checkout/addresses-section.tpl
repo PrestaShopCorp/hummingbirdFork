@@ -25,7 +25,13 @@ prefix='invoice_'
 {assign var="_billing_selected_address" value=$invoiceMetaFields.id_address_invoice.value|default:($cart.id_address_invoice|default:0)}
 
 <section class="one-page-checkout__section">
-  <h2 class="one-page-checkout__title">{l s='Delivery address' d='Shop.Theme.Checkout'}</h2>
+  <h2 class="one-page-checkout__title">
+    {if $is_virtual_cart}
+      {l s='Billing address' d='Shop.Theme.Checkout'}
+    {else}
+      {l s='Delivery address' d='Shop.Theme.Checkout'}
+    {/if}
+  </h2>
 
   <section id="opc-delivery-address" class="form-fields">
     <div id="opc-delivery-address-content">
@@ -52,15 +58,18 @@ prefix='invoice_'
       }
     </template>
 
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="opc-use-same-address" name="use_same_address" value="1" {if $useSameAddressField.value}checked{/if}>
-      <label class="form-check-label" for="opc-use-same-address">
-        {l s='Use this address for invoice too' d='Shop.Theme.Checkout'}
-      </label>
-    </div>
+    {if !$is_virtual_cart}
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="opc-use-same-address" name="use_same_address" value="1" {if $useSameAddressField.value}checked{/if}>
+        <label class="form-check-label" for="opc-use-same-address">
+          {l s='Use this address for invoice too' d='Shop.Theme.Checkout'}
+        </label>
+      </div>
+    {/if}
   </section>
 </section>
 
+{if !$is_virtual_cart}
 <section class="one-page-checkout__section" id="opc-billing-section" style="display: none;">
   <h2 class="one-page-checkout__title">{l s='Billing address' d='Shop.Theme.Checkout'}</h2>
 
@@ -94,6 +103,7 @@ prefix='invoice_'
     </template>
   </section>
 </section>
+{/if}
 
 {capture name="address_selector_bottom"}{hook h='displayAddressSelectorBottom'}{/capture}
 {if $smarty.capture.address_selector_bottom}
