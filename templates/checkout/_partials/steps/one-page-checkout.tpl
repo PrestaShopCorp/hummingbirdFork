@@ -47,7 +47,7 @@
                  value="1"
                  class="form-check-input"
           >
-          <label class="js-terms form-check-label" for="conditions_to_approve[{$condition_name}]">
+          <label class="js-terms form-check-label required" for="conditions_to_approve[{$condition_name}]">
             {$condition nofilter}
           </label>
         </div>
