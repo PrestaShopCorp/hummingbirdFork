@@ -35,4 +35,9 @@ $component-name: one-page-checkout;
       margin-bottom: 1rem;
     }
   }
+
+  .opc-address-item .form-check-input,
+  .opc-address-item .form-check-label {
+    cursor: pointer;
+  }
 }

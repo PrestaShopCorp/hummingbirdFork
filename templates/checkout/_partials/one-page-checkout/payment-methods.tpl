@@ -50,15 +50,17 @@
         {if $option.form}
           {$option.form nofilter}
         {else}
-          {foreach from=$option.inputs item=input}
-            <input
-              type="{$input.type}"
-              name="{$input.name}"
-              value="{$input.value}"
-              class="js-payment-option-input"
-              {if ($selected_payment_selection_key && $selected_payment_selection_key != $option.selection_key) || (!$selected_payment_selection_key && $option.module_name != $selected_payment_module)}disabled{/if}
-            >
-          {/foreach}
+          <form class="js-opc-payment-fallback" action="{$option.action nofilter}" method="post">
+            {foreach from=$option.inputs item=input}
+              <input
+                type="{$input.type}"
+                name="{$input.name}"
+                value="{$input.value}"
+                class="js-payment-option-input"
+                {if ($selected_payment_selection_key && $selected_payment_selection_key != $option.selection_key) || (!$selected_payment_selection_key && $option.module_name != $selected_payment_module)}disabled{/if}
+              >
+            {/foreach}
+          </form>
         {/if}
       </div>
 
