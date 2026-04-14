@@ -20,18 +20,18 @@
           <input type="hidden" name="id_address" value="">
           <input type="hidden" name="token" value="{$token}">
           <input type="hidden" name="address_type" value="{$address_type}">
-          {assign var="_key_alias" value="{$prefix}alias"}
-          {assign var="_key_id_country" value="{$prefix}id_country"}
-          {assign var="_key_firstname" value="{$prefix}firstname"}
-          {assign var="_key_lastname" value="{$prefix}lastname"}
-          {assign var="_key_company" value="{$prefix}company"}
-          {assign var="_key_vat_number" value="{$prefix}vat_number"}
-          {assign var="_key_address1" value="{$prefix}address1"}
-          {assign var="_key_address2" value="{$prefix}address2"}
-          {assign var="_key_city" value="{$prefix}city"}
-          {assign var="_key_postcode" value="{$prefix}postcode"}
-          {assign var="_key_id_state" value="{$prefix}id_state"}
-          {assign var="_key_phone" value="{$prefix}phone"}
+          {assign var="_key_alias" value="alias"}
+          {assign var="_key_id_country" value="id_country"}
+          {assign var="_key_firstname" value="firstname"}
+          {assign var="_key_lastname" value="lastname"}
+          {assign var="_key_company" value="company"}
+          {assign var="_key_vat_number" value="vat_number"}
+          {assign var="_key_address1" value="address1"}
+          {assign var="_key_address2" value="address2"}
+          {assign var="_key_city" value="city"}
+          {assign var="_key_postcode" value="postcode"}
+          {assign var="_key_id_state" value="id_state"}
+          {assign var="_key_phone" value="phone"}
 
           {if isset($formFields[$_key_id_country])}
             <div class="form-group mb-3">
@@ -74,7 +74,7 @@
               </label>
               <select
                 class="form-select"
-                name="{if isset($formFields[$_key_id_state])}{$formFields[$_key_id_state].name}{else}{$prefix}id_state{/if}"
+                name="{if isset($formFields[$_key_id_state])}{$formFields[$_key_id_state].name}{else}id_state{/if}"
                 id="{$modal_id}-field-id_state"
                 data-select-placeholder="{l s='-- please choose --' d='Shop.Forms.Labels' js=1}"
               >

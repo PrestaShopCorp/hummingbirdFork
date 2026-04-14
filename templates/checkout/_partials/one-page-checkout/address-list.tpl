@@ -18,8 +18,8 @@
         <input
           type="radio"
           class="form-check-input js-opc-address-radio"
-          name="id_address_{if $prefix}invoice{else}delivery{/if}"
-          id="opc-address-{if $prefix}invoice{else}delivery{/if}-{$_address_id}"
+          name="id_address_{if $address_type == 'invoice'}invoice{else}delivery{/if}"
+          id="opc-address-{if $address_type == 'invoice'}invoice{else}delivery{/if}-{$_address_id}"
           value="{$_address_id}"
           {if $is_address_selected}checked{/if}
           aria-label="{l s='Select address: %alias%' sprintf=['%alias%' => $address.alias] d='Shop.Theme.Actions'}"
@@ -28,7 +28,7 @@
       </div>
 
       <div class="flex-grow-1">
-        <label class="form-check-label {if $is_address_selected}fw-semibold{/if}" for="opc-address-{if $prefix}invoice{else}delivery{/if}-{$_address_id}">
+        <label class="form-check-label {if $is_address_selected}fw-semibold{/if}" for="opc-address-{if $address_type == 'invoice'}invoice{else}delivery{/if}-{$_address_id}">
           {$address.alias}
         </label>
         <p class="mb-2 text-muted small" id="opc-address-details-{$_address_id}">
@@ -56,7 +56,7 @@
                 type="button"
                 class="dropdown-item"
                 data-bs-toggle="modal"
-                data-bs-target="{if $prefix}#modal-invoice{else}#modal-delivery{/if}"
+                data-bs-target="{if $address_type == 'invoice'}#modal-invoice{else}#modal-delivery{/if}"
                 data-type="edit"
                 data-id_address="{$_address_id}"
                 data-alias="{$address.alias|escape:'html':'UTF-8'}"
@@ -80,7 +80,7 @@
                 type="button"
                 class="dropdown-item link-danger js-delete-address"
                 data-id-address="{$_address_id}"
-                data-address-type="{if $prefix == 'invoice_'}invoice{else}delivery{/if}"
+                data-address-type="{if $address_type == 'invoice'}invoice{else}delivery{/if}"
                 data-confirm-message="{l s='Are you sure you want to delete this address?' d='Shop.Theme.Checkout'}"
               >
                 {l s='Delete' d='Shop.Theme.Actions'}
@@ -99,19 +99,19 @@
       role="button"
       data-bs-toggle="modal"
       data-type="create"
-      data-bs-target="{if $prefix == 'invoice_'}#modal-invoice{else}#modal-delivery{/if}"
+      data-bs-target="{if $address_type == 'invoice'}#modal-invoice{else}#modal-delivery{/if}"
     >
       <div class="form-check mb-2">
         <input
           type="radio"
           class="form-check-input js-opc-address-radio"
-          name="id_address_{if $prefix == 'invoice_'}invoice{else}delivery{/if}"
-          id="opc-new-{if $prefix == 'invoice_'}invoice{else}delivery{/if}-address"
+          name="id_address_{if $address_type == 'invoice'}invoice{else}delivery{/if}"
+          id="opc-new-{if $address_type == 'invoice'}invoice{else}delivery{/if}-address"
           value="new_address"
         >
       </div>
       <div class="flex-grow-1">
-        <label class="form-check-label" for="opc-new-{if $prefix == 'invoice_'}invoice{else}delivery{/if}-address">
+        <label class="form-check-label" for="opc-new-{if $address_type == 'invoice'}invoice{else}delivery{/if}-address">
           {l s='Use a different delivery address' d='Shop.Theme.Checkout'}
         </label>
       </div>
