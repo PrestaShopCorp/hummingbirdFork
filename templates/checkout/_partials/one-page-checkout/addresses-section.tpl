@@ -24,6 +24,34 @@ prefix='invoice_'
 {assign var="_delivery_selected_address" value=$deliveryFields.id_address_delivery.value|default:($cart.id_address_delivery|default:0)}
 {assign var="_billing_selected_address" value=$invoiceMetaFields.id_address_invoice.value|default:($cart.id_address_invoice|default:0)}
 
+<template id="opc-delivery-address-loader">
+  {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'
+    message={l s='Loading addresses...' d='Shop.Theme.Checkout'}
+  }
+</template>
+
+<template id="opc-delivery-address-error">
+  {include file='checkout/_partials/one-page-checkout/opc-error.tpl'
+    message={l s='An error occurred while loading addresses. Please try again.' d='Shop.Theme.Checkout'}
+    retry_label={l s='Retry' d='Shop.Theme.Checkout'}
+    retry_action='retry-addresses'
+  }
+</template>
+
+<template id="opc-billing-address-loader">
+  {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'
+    message={l s='Loading addresses...' d='Shop.Theme.Checkout'}
+  }
+</template>
+
+<template id="opc-billing-address-error">
+  {include file='checkout/_partials/one-page-checkout/opc-error.tpl'
+    message={l s='An error occurred while loading addresses. Please try again.' d='Shop.Theme.Checkout'}
+    retry_label={l s='Retry' d='Shop.Theme.Checkout'}
+    retry_action='retry-addresses'
+  }
+</template>
+
 <section class="one-page-checkout__section">
   <h2 class="one-page-checkout__title">
     {if $is_virtual_cart}
@@ -51,12 +79,6 @@ prefix='invoice_'
         }
       </div>
     </div>
-
-    <template id="opc-delivery-address-loader">
-      {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'
-        message={l s='Loading delivery address...' d='Shop.Theme.Checkout'}
-      }
-    </template>
 
     {if !$is_virtual_cart}
       <div class="form-check">
@@ -95,12 +117,6 @@ prefix='invoice_'
         }
       </div>
     </div>
-
-    <template id="opc-billing-address-loader">
-      {include file='checkout/_partials/one-page-checkout/opc-loader.tpl'
-        message={l s='Loading billing address...' d='Shop.Theme.Checkout'}
-      }
-    </template>
   </section>
 </section>
 {/if}
