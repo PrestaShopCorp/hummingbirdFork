@@ -1,9 +1,11 @@
 {**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
+{**
  * OPC — Payment methods list partial (AJAX refresh)
  * Variables: $payment_options, $is_free, $selected_payment_module, $selected_payment_selection_key
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  *}
 
 {foreach from=$payment_options item="module_options"}

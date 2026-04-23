@@ -1,12 +1,14 @@
 {**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
+{**
  * OPC — Loader / spinner
  * Intended to be embedded as a <template> element so JS can clone it.
  *
  * Variables:
  *   $message (optional) — text displayed below the spinner
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  *}
 <div class="d-flex flex-column justify-content-center align-items-center h-100 gap-2 py-3">
   <div class="spinner-border text-primary" role="status">

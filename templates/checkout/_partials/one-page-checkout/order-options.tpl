@@ -1,11 +1,13 @@
 {**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
+{**
  * OPC — Order options (delivery message, recyclable packaging, gift)
  * Mirrors the order-options block from shipping.tpl for ISO UX.
  *
  * Variables: $delivery_message, $recyclablePackAllowed, $recyclable, $gift
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  *}
 
 <div class="order-options mt-3">

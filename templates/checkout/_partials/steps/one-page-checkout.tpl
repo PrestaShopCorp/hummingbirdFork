@@ -1,8 +1,10 @@
 {**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
+{**
  * One Page Checkout - Layout
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  *}
 
 <form id="opc-form" class="one-page-checkout" method="POST" action="{$urls.pages.order}" data-ps-action="form-validation">

@@ -1,4 +1,8 @@
-{* templates/checkout/_partials/connected-account-info.tpl *}
+{**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
 <div class="step__account">
     <p>
         {l s='Connected as [1]%firstname% %lastname%[/1].'

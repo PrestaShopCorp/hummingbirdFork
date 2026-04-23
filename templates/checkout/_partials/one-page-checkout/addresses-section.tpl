@@ -1,3 +1,8 @@
+{**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
 {* Delivery Address Modal *}
 {include file='checkout/_partials/one-page-checkout/address-modal.tpl'
 modal_id='modal-delivery'

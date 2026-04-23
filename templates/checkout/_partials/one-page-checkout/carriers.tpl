@@ -1,9 +1,11 @@
 {**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
+{**
  * OPC — Carrier list partial (AJAX refresh)
  * Variables: $delivery_options, $delivery_option
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  *}
 
 {if $delivery_options|count}

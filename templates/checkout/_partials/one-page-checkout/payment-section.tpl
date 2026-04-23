@@ -1,4 +1,9 @@
 {**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
+{**
  * OPC — Payment method section
  * Included by one-page-checkout.tpl.
  * Also renderable standalone for AJAX refresh.
@@ -8,9 +13,6 @@
  *   $is_free                  - boolean, true when cart total is 0
  *   $selected_payment_module  - legacy fallback module_name of the currently selected payment option
  *   $selected_payment_selection_key - stable OPC selection key for the currently selected payment option
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  *}
 
 <section class="one-page-checkout__section js-opc-payment-section">

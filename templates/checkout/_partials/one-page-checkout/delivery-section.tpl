@@ -1,4 +1,9 @@
 {**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ *}
+
+{**
  * OPC — Delivery method section
  * Included by one-page-checkout.tpl.
  * Also renderable standalone for AJAX refresh.
@@ -9,9 +14,6 @@
  *   $id_address_delivery      - current cart delivery address ID
  *   $hookDisplayBeforeCarrier
  *   $hookDisplayAfterCarrier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  *}
 
 <section class="one-page-checkout__section js-opc-delivery-section">
