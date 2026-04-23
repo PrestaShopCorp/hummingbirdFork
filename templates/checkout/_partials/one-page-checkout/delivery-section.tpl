@@ -51,7 +51,7 @@
 
   <div class="delivery-options__extra-carrier" id="extra_carrier"></div>
 
-  {include file='checkout/_partials/one-page-checkout/opc-order-options.tpl'
+  {include file='checkout/_partials/one-page-checkout/order-options.tpl'
     delivery_message=$delivery_message|default:''
     recyclablePackAllowed=$recyclablePackAllowed|default:false
     recyclable=$recyclable|default:false

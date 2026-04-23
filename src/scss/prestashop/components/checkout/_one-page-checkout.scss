@@ -10,7 +10,7 @@ $component-name: one-page-checkout;
     padding-bottom: 1em;
 
     & + &,
-    .js-opc-address-form + & {
+    .js-opc-addresses-section + & {
       padding-top: 2em;
       border-top: 1px solid var(--bs-border-color);
     }
@@ -34,5 +34,10 @@ $component-name: one-page-checkout;
     .form-check {
       margin-bottom: 1rem;
     }
+  }
+
+  .opc-address-item .form-check-input,
+  .opc-address-item .form-check-label {
+    cursor: pointer;
   }
 }

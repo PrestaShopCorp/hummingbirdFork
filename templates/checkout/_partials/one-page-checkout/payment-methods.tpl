@@ -1,6 +1,6 @@
 {**
  * OPC — Payment methods list partial (AJAX refresh)
- * Variables: $payment_options, $is_free, $selected_payment_module
+ * Variables: $payment_options, $is_free, $selected_payment_module, $selected_payment_selection_key
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,9 +17,10 @@
           type="radio"
           name="payment-option"
           data-module-name="{$option.module_name}"
+          data-selection-key="{$option.selection_key|default:''}"
           id="{$option.id}"
           value="{$option.id}"
-          {if ($selected_payment_module == $option.module_name || $is_free) || ($payment_options|@count === 1 && $module_options|@count === 1)} checked {/if}
+          {if ($selected_payment_selection_key && $selected_payment_selection_key == $option.selection_key) || (!$selected_payment_selection_key && $selected_payment_module == $option.module_name) || $is_free} checked {/if}
         >
         <label class="payment-option__label form-check-label" for="{$option.id}">
           {if $option.logo}
@@ -34,7 +35,7 @@
         <div
           id="{$option.id}-additional-information"
           class="payment-option__additional-information js-additional-information"
-          {if $option.module_name != $selected_payment_module}style="display: none;"{/if}
+          {if ($selected_payment_selection_key && $selected_payment_selection_key != $option.selection_key) || (!$selected_payment_selection_key && $option.module_name != $selected_payment_module)}style="display: none;"{/if}
         >
           {$option.additionalInformation nofilter}
         </div>
@@ -44,16 +45,21 @@
       <div
         id="pay-with-{$option.id}-form"
         class="js-payment-option-form"
-        {if $option.module_name != $selected_payment_module}style="display: none;"{/if}
+        {if ($selected_payment_selection_key && $selected_payment_selection_key != $option.selection_key) || (!$selected_payment_selection_key && $option.module_name != $selected_payment_module)}style="display: none;"{/if}
       >
         {if $option.form}
           {$option.form nofilter}
         {else}
-          <form id="payment-form" method="POST" action="{$option.action nofilter}">
+          <form class="js-opc-payment-fallback" action="{$option.action nofilter}" method="post">
             {foreach from=$option.inputs item=input}
-              <input type="{$input.type}" name="{$input.name}" value="{$input.value}">
+              <input
+                type="{$input.type}"
+                name="{$input.name}"
+                value="{$input.value}"
+                class="js-payment-option-input"
+                {if ($selected_payment_selection_key && $selected_payment_selection_key != $option.selection_key) || (!$selected_payment_selection_key && $option.module_name != $selected_payment_module)}disabled{/if}
+              >
             {/foreach}
-            <button style="display:none" id="pay-with-{$option.id}" type="submit"></button>
           </form>
         {/if}
       </div>

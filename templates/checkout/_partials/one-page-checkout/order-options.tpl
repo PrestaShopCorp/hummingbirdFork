@@ -40,17 +40,15 @@
 
   {if $gift.allowed}
     <div class="form-check mb-2">
-      <input
-        class="form-check-input js-gift-checkbox"
-        type="checkbox"
-        id="input_gift"
-        name="gift"
-        value="1"
-        data-bs-toggle="collapse"
-        data-bs-target="#opc-gift-message"
-        {if $gift.isGift}checked{/if}
-      >
-      <label class="form-check-label" for="input_gift">
+      <label class="form-check-label" for="input_gift" data-bs-toggle="collapse" data-bs-target="#opc-gift-message">
+        <input
+          class="form-check-input js-gift-checkbox"
+          type="checkbox"
+          id="input_gift"
+          name="gift"
+          value="1"
+          {if $gift.isGift}checked{/if}
+        >
         {$gift.label}
       </label>
     </div>
@@ -64,7 +62,7 @@
         rows="2"
         id="gift_message"
         name="gift_message"
-      >{$gift.message|escape:'html'}</textarea>
+      >{$gift.message}</textarea>
     </div>
   {/if}
 </div>
