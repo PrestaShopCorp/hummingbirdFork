@@ -61,6 +61,7 @@
           <option value="{$value}" {if (string) $value === (string) $field.value}selected{/if}>{$label}</option>
         {/foreach}
       </select>
+      {include file='_partials/form-errors.tpl' errors=$field.errors|default:[]}
     </div>
 
   {else}
