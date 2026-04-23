@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * LICENSE.md file that was distributed with this source code.
+ */
 const path = require('path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -195,21 +199,3 @@ exports.preloadFonts = () => ({
   ]
 });
 
-exports.expose = () => ({
-  module: {
-    rules: [
-      {
-        test: require.resolve('jquery'),
-        loader: 'expose-loader',
-        options: {
-          exposes: {
-            globalName: [
-              '$',
-              'jQuery',
-            ],
-          },
-        },
-      },
-    ],
-  },
-});
