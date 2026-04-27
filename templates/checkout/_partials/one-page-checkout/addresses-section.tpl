@@ -10,7 +10,6 @@ formFields=$deliveryFields
 title_new={l s='New delivery address' d='Shop.Theme.Checkout'}
 title_edit={l s='Edit delivery address' d='Shop.Theme.Checkout'}
 address_type='delivery'
-prefix=''
 }
 
 {* Billing Address Modal *}
@@ -20,7 +19,6 @@ formFields=$invoiceFields
 title_new={l s='New billing address' d='Shop.Theme.Checkout'}
 title_edit={l s='Edit billing address' d='Shop.Theme.Checkout'}
 address_type='invoice'
-prefix='invoice_'
 }
 
 {include file='checkout/_partials/one-page-checkout/delete-address-modal.tpl'}
@@ -71,7 +69,7 @@ prefix='invoice_'
         <div id="opc-delivery-address-content-list" class="{if $_addresses_count <= 0}d-none{/if}">
           {if $_addresses_count > 0}
           {include file='checkout/_partials/one-page-checkout/address-list.tpl'
-            prefix=''
+            address_type='delivery'
             selected_address=$_delivery_selected_address
           }
           {/if}
@@ -80,7 +78,6 @@ prefix='invoice_'
       <div id="opc-delivery-address-fields" class="{if $_addresses_count > 0}d-none{/if}">
         {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
           formFields=$deliveryFields
-          prefix=''
         }
       </div>
     </div>
@@ -105,7 +102,7 @@ prefix='invoice_'
         <div id="opc-billing-address-content-list" class="{if $_addresses_count <= 1}d-none{/if}">
           {if $_addresses_count > 1}
           {include file='checkout/_partials/one-page-checkout/address-list.tpl'
-            prefix='invoice_'
+            address_type='invoice'
             selected_address=$_billing_selected_address
           }
           {/if}
@@ -118,7 +115,6 @@ prefix='invoice_'
 
         {include file='checkout/_partials/one-page-checkout/address-fields.tpl'
           formFields=$invoiceFields
-          prefix='invoice_'
         }
       </div>
     </div>

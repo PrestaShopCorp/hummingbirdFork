@@ -7,44 +7,30 @@
  * One Page Checkout - Address fields partial
  *}
 
-{assign var="_prefix_len" value=$prefix|strlen}
-{assign var="_key_firstname" value="{$prefix}firstname"}
-{assign var="_key_lastname" value="{$prefix}lastname"}
-{assign var="_key_city" value="{$prefix}city"}
-{assign var="_key_postcode" value="{$prefix}postcode"}
-{assign var="_key_id_state" value="{$prefix}id_state"}
-
-{assign var="_has_name_row" value=isset($formFields[$_key_firstname]) && isset($formFields[$_key_lastname])}
-{assign var="_has_city_row" value=isset($formFields[$_key_city]) && isset($formFields[$_key_postcode])}
-{assign var="_has_state" value=isset($formFields[$_key_id_state])}
+{assign var="_has_name_row" value=isset($formFields.firstname) && isset($formFields.lastname)}
+{assign var="_has_city_row" value=isset($formFields.city) && isset($formFields.postcode)}
+{assign var="_has_state" value=isset($formFields.id_state)}
 
 {foreach from=$formFields item="field"}
-  {if $prefix && strpos($field.name, $prefix) !== 0}{continue}{/if}
-  {if !$prefix && strpos($field.name, 'invoice_') === 0}{continue}{/if}
-
-  {if $prefix}
-    {assign var="_base" value=$field.name|substr:$_prefix_len}
-  {else}
-    {assign var="_base" value=$field.name}
-  {/if}
+  {assign var="_base" value=$field.name}
 
   {if $_base === 'alias'}
     {form_field field=$field}
 
   {elseif $_base === 'firstname' && $_has_name_row}
     {include file='_partials/form-fields-row.tpl'
-      fields=[$formFields[$_key_firstname], $formFields[$_key_lastname]]
+      fields=[$formFields.firstname, $formFields.lastname]
     }
 
   {elseif $_base === 'lastname' && $_has_name_row}
   {elseif $_base === 'city' && $_has_city_row}
     {if $_has_state}
       {include file='_partials/form-fields-row.tpl'
-        fields=[$formFields[$_key_city], $formFields[$_key_id_state], $formFields[$_key_postcode]]
+        fields=[$formFields.city, $formFields.id_state, $formFields.postcode]
       }
     {else}
       {include file='_partials/form-fields-row.tpl'
-        fields=[$formFields[$_key_city], $formFields[$_key_postcode]]
+        fields=[$formFields.city, $formFields.postcode]
       }
     {/if}
 

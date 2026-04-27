@@ -18,8 +18,10 @@ export const FormWithRequiredFields = `
     </div>
 
     <section id="opc-billing-section" style="display: none;">
-      <input type="text" name="invoice_firstname" id="field-invoice_firstname" required>
-      <input type="text" name="invoice_lastname" id="field-invoice_lastname" required>
+      <div id="opc-billing-address-fields">
+        <input type="text" name="firstname" id="billing-field-firstname" required>
+        <input type="text" name="lastname" id="billing-field-lastname" required>
+      </div>
     </section>
 
     <div class="form-check">
